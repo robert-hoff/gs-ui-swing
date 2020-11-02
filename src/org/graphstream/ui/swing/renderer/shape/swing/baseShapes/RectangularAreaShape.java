@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.baseShapes;
 
 import java.awt.geom.Rectangle2D;
@@ -39,41 +39,41 @@ import org.graphstream.ui.view.camera.DefaultCamera2D;
 import org.graphstream.ui.swing.renderer.Skeleton;
 
 public abstract class RectangularAreaShape extends AreaShape {
-	private java.awt.geom.RectangularShape theShape = new Rectangle2D.Double();
-	
-	@Override
-	public void make(Backend backend, DefaultCamera2D camera) {
-		double w = area.theSize.x;
-		double h = area.theSize.y;
-		
-		theShape().setFrame(area.theCenter.x-w/2, area.theCenter.y-h/2, w, h);	
-	}
+  private java.awt.geom.RectangularShape theShape = new Rectangle2D.Double();
 
-	@Override
-	public void makeShadow(Backend backend, DefaultCamera2D camera) {
-		double x = area.theCenter.x + shadowable.theShadowOff.x;
-		double y = area.theCenter.y + shadowable.theShadowOff.y;
-		double w = area.theSize.x + shadowable.theShadowWidth.x * 2;
-		double h = area.theSize.y + shadowable.theShadowWidth.y * 2;
-		
-		theShape().setFrame(x-w/2, y-h/2, w, h);
-	}
+  @Override
+  public void make(Backend backend, DefaultCamera2D camera) {
+    double w = area.theSize.x;
+    double h = area.theSize.y;
 
-	@Override
-	public void render(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skel) {
-		make(bck, camera);
- 		fillable.fill(bck.graphics2D(), theShape(), camera);
- 		strokable.stroke(bck.graphics2D(), theShape());
- 		decorArea(bck, camera, skel.iconAndText, element, theShape());
-	}
+    theShape().setFrame(area.theCenter.x - w / 2, area.theCenter.y - h / 2, w, h);
+  }
 
-	@Override
-	public void renderShadow(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skeleton) {
-		makeShadow(bck, camera);
- 		shadowable.cast(bck.graphics2D(), theShape());
-	}
-	
-	public java.awt.geom.RectangularShape theShape() {
-		return theShape;
-	}
+  @Override
+  public void makeShadow(Backend backend, DefaultCamera2D camera) {
+    double x = area.theCenter.x + shadowable.theShadowOff.x;
+    double y = area.theCenter.y + shadowable.theShadowOff.y;
+    double w = area.theSize.x + shadowable.theShadowWidth.x * 2;
+    double h = area.theSize.y + shadowable.theShadowWidth.y * 2;
+
+    theShape().setFrame(x - w / 2, y - h / 2, w, h);
+  }
+
+  @Override
+  public void render(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skel) {
+    make(bck, camera);
+    fillable.fill(bck.graphics2D(), theShape(), camera);
+    strokable.stroke(bck.graphics2D(), theShape());
+    decorArea(bck, camera, skel.iconAndText, element, theShape());
+  }
+
+  @Override
+  public void renderShadow(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skeleton) {
+    makeShadow(bck, camera);
+    shadowable.cast(bck.graphics2D(), theShape());
+  }
+
+  public java.awt.geom.RectangularShape theShape() {
+    return theShape;
+  }
 }

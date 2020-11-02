@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.viewer.test;
 
 import org.graphstream.graph.Graph;
@@ -41,108 +41,114 @@ import org.graphstream.ui.view.ViewerPipe;
  * Test the viewer.
  */
 public class DemoViewerColorInterpolation implements ViewerListener {
-	public static void main(String args[]) {
-		// System.setProperty( "gs.ui.renderer",
-		// "org.graphstream.ui.j2dviewer.J2DGraphRenderer" );
-		System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
-		new DemoViewerColorInterpolation();
-	}
+  public static void main(String args[]) {
+    // System.setProperty( "gs.ui.renderer",
+    // "org.graphstream.ui.j2dviewer.J2DGraphRenderer" );
+    System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
+    new DemoViewerColorInterpolation();
+  }
 
-	protected boolean loop = true;
+  protected boolean loop = true;
 
-	public DemoViewerColorInterpolation() {
-		Graph graph = new MultiGraph("main graph");
-		ViewerPipe pipe = graph.display(false).newViewerPipe();
-		
-		// graph.setAttribute( "ui.quality" );
-		graph.setAttribute("ui.antialias");
+  public DemoViewerColorInterpolation() {
+    Graph graph = new MultiGraph("main graph");
+    ViewerPipe pipe = graph.display(false).newViewerPipe();
 
-		pipe.addViewerListener(this);
+    // graph.setAttribute( "ui.quality" );
+    graph.setAttribute("ui.antialias");
 
-		Node A = graph.addNode("A");
-		Node B = graph.addNode("B");
-		Node C = graph.addNode("C");
+    pipe.addViewerListener(this);
 
-		graph.addEdge("AB", "A", "B", true);
-		graph.addEdge("BC", "B", "C", true);
-		graph.addEdge("CA", "C", "A", true);
+    Node A = graph.addNode("A");
+    Node B = graph.addNode("B");
+    Node C = graph.addNode("C");
 
-		A.setAttribute("xyz", 0, 1, 0);
-		B.setAttribute("xyz", 1, 0, 0);
-		C.setAttribute("xyz", -1, 0, 0);
+    graph.addEdge("AB", "A", "B", true);
+    graph.addEdge("BC", "B", "C", true);
+    graph.addEdge("CA", "C", "A", true);
 
-		graph.setAttribute("ui.stylesheet", styleSheet);
+    A.setAttribute("xyz", 0, 1, 0);
+    B.setAttribute("xyz", 1, 0, 0);
+    C.setAttribute("xyz", -1, 0, 0);
 
-		float color = 0;
-		float dir = 0.01f;
+    graph.setAttribute("ui.stylesheet", styleSheet);
 
-		while (loop) {
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+    float color = 0;
+    float dir = 0.01f;
 
-			pipe.pump();
+    while (loop) {
+      try {
+        Thread.sleep(100);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
 
-			color += dir;
+      pipe.pump();
 
-			if (color > 1) {
-				color = 1;
-				dir = -dir;
-			} else if (color < 0) {
-				color = 0;
-				dir = -dir;
-			}
+      color += dir;
 
-			A.setAttribute("ui.color", color);
-			showSelection(graph);
-		}
+      if (color > 1) {
+        color = 1;
+        dir = -dir;
+      } else if (color < 0) {
+        color = 0;
+        dir = -dir;
+      }
 
-		System.out.printf("Bye bye ...%n");
-		System.exit(0);
-	}
+      A.setAttribute("ui.color", color);
+      showSelection(graph);
+    }
 
-	protected void showSelection(Graph graph) {
-		boolean selection = false;
-		StringBuilder sb = new StringBuilder();
+    System.out.printf("Bye bye ...%n");
+    System.exit(0);
+  }
 
-		sb.append("[");
+  protected void showSelection(Graph graph) {
+    boolean selection = false;
+    StringBuilder sb = new StringBuilder();
 
-		for (Node node : graph) {
-			if (node.hasAttribute("ui.selected")) {
-				sb.append(String.format(" %s", node.getId()));
-				selection = true;
-			}
-			if (node.hasAttribute("ui.clicked")) {
-				System.err.printf("node %s clicked%n", node.getId());
-			}
-		}
+    sb.append("[");
 
-		sb.append(" ]");
+    for (Node node : graph) {
+      if (node.hasAttribute("ui.selected")) {
+        sb.append(String.format(" %s", node.getId()));
+        selection = true;
+      }
+      if (node.hasAttribute("ui.clicked")) {
+        System.err.printf("node %s clicked%n", node.getId());
+      }
+    }
 
-		if (selection)
-			System.err.printf("selection = %s%n", sb.toString());
-	}
+    sb.append(" ]");
 
-	protected static String styleSheet = "graph         { padding: 20px; stroke-width: 0px; }"
-			+ "node:selected { fill-color: red;  fill-mode: plain; }"
-			+ "node:clicked  { fill-color: blue; fill-mode: plain; }"
-			+ "node#A        { fill-color: green, yellow, purple; fill-mode: dyn-plain; }";
+    if (selection) {
+      System.err.printf("selection = %s%n", sb.toString());
+    }
+  }
 
-	public void buttonPushed(String id) {
-	}
+  protected static String styleSheet = "graph         { padding: 20px; stroke-width: 0px; }"
+      + "node:selected { fill-color: red;  fill-mode: plain; }"
+      + "node:clicked  { fill-color: blue; fill-mode: plain; }"
+      + "node#A        { fill-color: green, yellow, purple; fill-mode: dyn-plain; }";
 
-	public void buttonReleased(String id) {
-	}
+  @Override
+  public void buttonPushed(String id) {
+  }
 
-	public void mouseOver(String id) {
-	}
+  @Override
+  public void buttonReleased(String id) {
+  }
 
-	public void mouseLeft(String id) {
-	}
+  @Override
+  public void mouseOver(String id) {
+  }
 
-	public void viewClosed(String viewName) {
-		loop = false;
-	}
+  @Override
+  public void mouseLeft(String id) {
+  }
+
+  @Override
+  public void viewClosed(String viewName) {
+    loop = false;
+  }
 }

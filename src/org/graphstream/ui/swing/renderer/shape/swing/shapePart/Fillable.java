@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.shapePart;
 
 import java.awt.Color;
@@ -45,78 +45,87 @@ import org.graphstream.ui.swing.renderer.shape.swing.ShapePaint.ShapeColorPaint;
 import org.graphstream.ui.swing.renderer.shape.swing.ShapePaint.ShapePlainColorPaint;
 
 public class Fillable {
-	
-	/** The fill paint. */
-	ShapePaint fillPaint = null;
- 
-	/** Value in [0..1] for dyn-colors. */
-	double theFillPercent = 0.0;
-	
-	Color theFillColor = null;
-	
-	boolean plainFast = false;
-	
-	/** Fill the shape.
-	 * @param g The Java2D graphics.
-	 * @param dynColor The value between 0 and 1 allowing to know the dynamic plain color, if any.
-	 * @param shape The awt shape to fill. */
-	public void fill(Graphics2D g, double dynColor, Color optColor, java.awt.Shape shape, DefaultCamera2D camera) {
-		if(plainFast) {
-			g.setColor(theFillColor);
-			g.fill(shape);
-	    } 
-		else {
-			if ( fillPaint instanceof ShapeAreaPaint ) {
-				g.setPaint(((ShapeAreaPaint)fillPaint).paint(shape, camera.getMetrics().ratioPx2Gu));   
-				g.fill(shape);
-			}
-			else if (fillPaint instanceof ShapeColorPaint ) {
-				g.setPaint(((ShapeColorPaint)fillPaint).paint(dynColor, optColor));
-				g.fill(shape);
-			}
-	    }
-	}
-	
-	/** Fill the shape.
-	 * @param g The Java2D graphics.
-	 * @param shape The awt shape to fill. */
- 	public void fill(Graphics2D g, java.awt.Shape shape, DefaultCamera2D camera) { fill( g, theFillPercent, theFillColor, shape, camera ); }
 
-    /** Configure all static parts needed to fill the shape. */
- 	public void configureFillableForGroup(Backend bck, Style style, DefaultCamera2D camera ) {
- 		fillPaint = ShapePaint.apply(style);
- 
- 		if(fillPaint instanceof ShapePlainColorPaint) {
- 			ShapePlainColorPaint paint = (ShapePlainColorPaint)fillPaint;
- 		    plainFast = true;
- 		    theFillColor = paint.color;
- 		    bck.graphics2D().setColor(theFillColor);
- 		    // We prepare to accelerate the filling process if we know the color is not dynamic
- 		    // and is plain: no need to change the paint at each new position for the shape.
- 		} 
- 		else {
- 		    plainFast = false;
- 		}
- 	}
- 	
-    /** Configure the dynamic parts needed to fill the shape. */
-  	public void configureFillableForElement( Style style, DefaultCamera2D camera, GraphicElement element ) {
-  	  	if( style.getFillMode() == StyleConstants.FillMode.DYN_PLAIN && element != null ) {
-  	  		if ( element.getAttribute( "ui.color" ) instanceof Number ) {
-  	  			theFillPercent = (float)((Number)element.getAttribute( "ui.color" ));
-  	  			theFillColor = null;
-  	  		}
-  	  		else if ( element.getAttribute( "ui.color" ) instanceof Color ) {
-  	  			theFillColor = ((Color)element.getAttribute( "ui.color" )); 
-  	  			theFillPercent = 0;
-  	  		}
-  	  		else {
-  	  			theFillPercent = 0; 
-  	  			theFillColor = null;
-  	  		}
-  	  	}
-  	  	else {
-  	  		theFillPercent = 0;
-  	  	}
-  	}
+  /** The fill paint. */
+  ShapePaint fillPaint = null;
+
+  /** Value in [0..1] for dyn-colors. */
+  double theFillPercent = 0.0;
+
+  Color theFillColor = null;
+
+  boolean plainFast = false;
+
+  /**
+   * Fill the shape.
+   * 
+   * @param g
+   *          The Java2D graphics.
+   * @param dynColor
+   *          The value between 0 and 1 allowing to know the dynamic plain color,
+   *          if any.
+   * @param shape
+   *          The awt shape to fill.
+   */
+  public void fill(Graphics2D g, double dynColor, Color optColor, java.awt.Shape shape, DefaultCamera2D camera) {
+    if (plainFast) {
+      g.setColor(theFillColor);
+      g.fill(shape);
+    } else {
+      if (fillPaint instanceof ShapeAreaPaint) {
+        g.setPaint(((ShapeAreaPaint) fillPaint).paint(shape, camera.getMetrics().ratioPx2Gu));
+        g.fill(shape);
+      } else if (fillPaint instanceof ShapeColorPaint) {
+        g.setPaint(((ShapeColorPaint) fillPaint).paint(dynColor, optColor));
+        g.fill(shape);
+      }
+    }
+  }
+
+  /**
+   * Fill the shape.
+   * 
+   * @param g
+   *          The Java2D graphics.
+   * @param shape
+   *          The awt shape to fill.
+   */
+  public void fill(Graphics2D g, java.awt.Shape shape, DefaultCamera2D camera) {
+    fill(g, theFillPercent, theFillColor, shape, camera);
+  }
+
+  /** Configure all static parts needed to fill the shape. */
+  public void configureFillableForGroup(Backend bck, Style style, DefaultCamera2D camera) {
+    fillPaint = ShapePaint.apply(style);
+
+    if (fillPaint instanceof ShapePlainColorPaint) {
+      ShapePlainColorPaint paint = (ShapePlainColorPaint) fillPaint;
+      plainFast = true;
+      theFillColor = paint.color;
+      bck.graphics2D().setColor(theFillColor);
+      // We prepare to accelerate the filling process if we know the color is not
+      // dynamic
+      // and is plain: no need to change the paint at each new position for the shape.
+    } else {
+      plainFast = false;
+    }
+  }
+
+  /** Configure the dynamic parts needed to fill the shape. */
+  public void configureFillableForElement(Style style, DefaultCamera2D camera, GraphicElement element) {
+    if (style.getFillMode() == StyleConstants.FillMode.DYN_PLAIN && element != null) {
+      if (element.getAttribute("ui.color") instanceof Number) {
+        theFillPercent = (float) ((Number) element.getAttribute("ui.color"));
+        theFillColor = null;
+      } else if (element.getAttribute("ui.color") instanceof Color) {
+        theFillColor = ((Color) element.getAttribute("ui.color"));
+        theFillPercent = 0;
+      } else {
+        theFillPercent = 0;
+        theFillColor = null;
+      }
+    } else {
+      theFillPercent = 0;
+    }
+  }
 }

@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.viewer.test;
 
 import org.graphstream.graph.Graph;
@@ -41,64 +41,63 @@ import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 
 public class DemoAllInSwing {
-	public static void main(String args[]) {
-		new DemoAllInSwing();
-	}
-	
-	public DemoAllInSwing() {
-		// On est dans le thread main.
-		
-		Graph graph  = new MultiGraph("mg");
-		
-		// On demande au viewer de consid�rer que le graphe ne sera lu et modifi� que
-		// dans le thread Swing.
-		
-		SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+  public static void main(String args[]) {
+    new DemoAllInSwing();
+  }
 
-		// � Partir de l�, le viewer consid�re que le graphe est dans son propre thread,
-		// c'est-�-dire le thread Swing. Il est donc dangereux d'y toucher dans la thread
-		// main. On utilise invokeLater pour faire tourner du code dans le thread Swing,
-		// par exemple pour initialiser l'application :
-		
-		SwingUtilities.invokeLater(new InitializeApplication(viewer, graph));
-	}
+  public DemoAllInSwing() {
+    // On est dans le thread main.
+
+    Graph graph = new MultiGraph("mg");
+
+    // On demande au viewer de consid�rer que le graphe ne sera lu et modifi� que
+    // dans le thread Swing.
+
+    SwingViewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+
+    // � Partir de l�, le viewer consid�re que le graphe est dans son propre thread,
+    // c'est-�-dire le thread Swing. Il est donc dangereux d'y toucher dans la
+    // thread
+    // main. On utilise invokeLater pour faire tourner du code dans le thread Swing,
+    // par exemple pour initialiser l'application :
+
+    SwingUtilities.invokeLater(new InitializeApplication(viewer, graph));
+  }
 }
 
 class InitializeApplication extends JFrame implements Runnable {
-	private static final long serialVersionUID = - 804177406404724792L;
-	protected Graph graph;
-	protected SwingViewer viewer;
-	
-	public InitializeApplication(SwingViewer viewer, Graph graph) {
-		this.viewer = viewer;
-		this.graph = graph;
-	}
-	
-	public void run() {
-		graph.addNode("A");
-		graph.addNode("B");
-		graph.addNode("C");
-		graph.addEdge("AB", "A", "B");
-		graph.addEdge("BC", "B", "C");
-		graph.addEdge("CA", "C", "A");
-		graph.setAttribute( "ui.antialias" );
-		graph.setAttribute( "ui.quality" );
-		graph.setAttribute( "ui.stylesheet", styleSheet );
-   
-		graph.getNode("A").setAttribute("xyz", -1, 0, 0 );
-		graph.getNode("B").setAttribute("xyz",  1, 0, 0 );
-  		graph.getNode("C").setAttribute("xyz",  0, 1, 0 );
-   
-  		// On ins�re la vue principale du viewer dans la JFrame.
-  		
-		add((ViewPanel) viewer.addDefaultView( false ), BorderLayout.CENTER );
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(800, 600);
-		setVisible(true);
-	}
-  
-	protected static String styleSheet =
-			"graph {"+
-			"	padding: 60px;"+
-			"}";
+  private static final long serialVersionUID = -804177406404724792L;
+  protected Graph graph;
+  protected SwingViewer viewer;
+
+  public InitializeApplication(SwingViewer viewer, Graph graph) {
+    this.viewer = viewer;
+    this.graph = graph;
+  }
+
+  @Override
+  public void run() {
+    graph.addNode("A");
+    graph.addNode("B");
+    graph.addNode("C");
+    graph.addEdge("AB", "A", "B");
+    graph.addEdge("BC", "B", "C");
+    graph.addEdge("CA", "C", "A");
+    graph.setAttribute("ui.antialias");
+    graph.setAttribute("ui.quality");
+    graph.setAttribute("ui.stylesheet", styleSheet);
+
+    graph.getNode("A").setAttribute("xyz", -1, 0, 0);
+    graph.getNode("B").setAttribute("xyz", 1, 0, 0);
+    graph.getNode("C").setAttribute("xyz", 0, 1, 0);
+
+    // On ins�re la vue principale du viewer dans la JFrame.
+
+    add((ViewPanel) viewer.addDefaultView(false), BorderLayout.CENTER);
+    setDefaultCloseOperation(EXIT_ON_CLOSE);
+    setSize(800, 600);
+    setVisible(true);
+  }
+
+  protected static String styleSheet = "graph {" + "	padding: 60px;" + "}";
 }

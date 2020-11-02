@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing_viewer;
 
 import org.graphstream.ui.view.View;
@@ -44,40 +44,42 @@ import javax.swing.JPanel;
  * using methods to translate, zoom and rotate the view.
  */
 public abstract class ViewPanel extends JPanel implements View {
-	private static final long serialVersionUID = 4372240131578395549L;
+  private static final long serialVersionUID = 4372240131578395549L;
 
-	/**
-	 * The view identifier.
-	 */
-	private final String id;
+  /**
+   * The view identifier.
+   */
+  private final String id;
 
-	/**
-	 * New view.
-	 *
-	 * @param identifier
-	 *            The view unique identifier.
-	 */
-	public ViewPanel(final String identifier) {
-		if (null == identifier || identifier.isEmpty()) {
-			throw new IllegalArgumentException("View id cannot be null/empty.");
-		}
-		id = identifier;
-	}
+  /**
+   * New view.
+   *
+   * @param identifier
+   *          The view unique identifier.
+   */
+  public ViewPanel(final String identifier) {
+    if (null == identifier || identifier.isEmpty()) {
+      throw new IllegalArgumentException("View id cannot be null/empty.");
+    }
+    id = identifier;
+  }
 
-	public String getIdView() {
-		return id;
-	}
+  @Override
+  public String getIdView() {
+    return id;
+  }
 
-	/**
-	 * Set the size of the view frame, if any. If this view has been open in a
-	 * frame, this changes the size of the frame containing it.
-	 *
-	 * @param width
-	 *            The new width.
-	 * @param height
-	 *            The new height.
-	 */
-	public abstract void resizeFrame(int width, int height);
-	
-	public abstract void enableMouseOptions();
+  /**
+   * Set the size of the view frame, if any. If this view has been open in a
+   * frame, this changes the size of the frame containing it.
+   *
+   * @param width
+   *          The new width.
+   * @param height
+   *          The new height.
+   */
+  public abstract void resizeFrame(int width, int height);
+
+  @Override
+  public abstract void enableMouseOptions();
 }

@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.shapePart;
 
 import java.awt.Color;
@@ -39,28 +39,28 @@ import org.graphstream.ui.view.camera.DefaultCamera2D;
 import org.graphstream.ui.swing.renderer.shape.swing.ShapeStroke;
 
 public class Strokable {
-    /** The stroke color. */
-	public Color strokeColor = null ;
+  /** The stroke color. */
+  public Color strokeColor = null;
 
-	/** The stroke. */
-	public ShapeStroke theStroke = null ;
- 	
-	/** The stroke width. */
-	public double theStrokeWidth = 0.0 ;
+  /** The stroke. */
+  public ShapeStroke theStroke = null;
 
- 	/** Paint the stroke of the shape. */
-	public void stroke( Graphics2D g, java.awt.Shape shape ) {
-		if(theStroke != null) {
-			g.setStroke( theStroke.stroke( theStrokeWidth ) );
-			g.setColor( strokeColor );
-			g.draw( shape );
-		}	  
-	}
-	
- 	/** Configure all the static parts needed to stroke the shape. */
- 	public void configureStrokableForGroup( Style style, DefaultCamera2D camera ) {
-		theStrokeWidth = camera.getMetrics().lengthToGu( style.getStrokeWidth() );
-		/*if( strokeColor == null )*/ strokeColor = ShapeStroke.strokeColor( style );
-		/*if( theStroke   == null )*/ theStroke   = ShapeStroke.strokeForArea( style );
- 	}
+  /** The stroke width. */
+  public double theStrokeWidth = 0.0;
+
+  /** Paint the stroke of the shape. */
+  public void stroke(Graphics2D g, java.awt.Shape shape) {
+    if (theStroke != null) {
+      g.setStroke(theStroke.stroke(theStrokeWidth));
+      g.setColor(strokeColor);
+      g.draw(shape);
+    }
+  }
+
+  /** Configure all the static parts needed to stroke the shape. */
+  public void configureStrokableForGroup(Style style, DefaultCamera2D camera) {
+    theStrokeWidth = camera.getMetrics().lengthToGu(style.getStrokeWidth());
+    /* if( strokeColor == null ) */ strokeColor = ShapeStroke.strokeColor(style);
+    /* if( theStroke == null ) */ theStroke = ShapeStroke.strokeForArea(style);
+  }
 }

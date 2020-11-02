@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.spriteShapes;
 
 import java.awt.geom.Rectangle2D;
@@ -37,9 +37,10 @@ import java.awt.geom.RectangularShape;
 import org.graphstream.ui.swing.renderer.shape.swing.baseShapes.OrientableRectangularAreaShape;
 
 public class OrientableSquareShape extends OrientableRectangularAreaShape {
-	private RectangularShape theShape = new Rectangle2D.Double();
-	
-	public java.awt.geom.RectangularShape theShape() {
-		return theShape;
-	}
+  private RectangularShape theShape = new Rectangle2D.Double();
+
+  @Override
+  public java.awt.geom.RectangularShape theShape() {
+    return theShape;
+  }
 }

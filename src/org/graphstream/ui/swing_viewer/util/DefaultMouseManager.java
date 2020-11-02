@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing_viewer.util;
 
 import java.awt.event.MouseEvent;
@@ -43,157 +43,164 @@ import org.graphstream.ui.view.util.InteractiveElement;
 import org.graphstream.ui.view.util.MouseManager;
 
 public class DefaultMouseManager implements MouseInputListener, MouseManager {
-	// Attribute
+  // Attribute
 
-	/**
-	 * The view this manager operates upon.
-	 */
-	protected View view;
+  /**
+   * The view this manager operates upon.
+   */
+  protected View view;
 
-	/**
-	 * The graph to modify according to the view actions.
-	 */
-	protected GraphicGraph graph;
+  /**
+   * The graph to modify according to the view actions.
+   */
+  protected GraphicGraph graph;
 
-	final private EnumSet<InteractiveElement> types;
+  final private EnumSet<InteractiveElement> types;
 
-	// Construction
+  // Construction
 
-	public DefaultMouseManager() {
-		this(EnumSet.of(InteractiveElement.NODE,InteractiveElement.SPRITE));
-	}
+  public DefaultMouseManager() {
+    this(EnumSet.of(InteractiveElement.NODE, InteractiveElement.SPRITE));
+  }
 
-	public DefaultMouseManager(EnumSet<InteractiveElement> types) {
-		this.types = types;
-	}
+  public DefaultMouseManager(EnumSet<InteractiveElement> types) {
+    this.types = types;
+  }
 
-	public void init(GraphicGraph graph, View view) {
-		this.view = view;
-		this.graph = graph;
-		view.addListener("Mouse", this);
-		view.addListener("MouseMotion", this);
-	}
+  @Override
+  public void init(GraphicGraph graph, View view) {
+    this.view = view;
+    this.graph = graph;
+    view.addListener("Mouse", this);
+    view.addListener("MouseMotion", this);
+  }
 
-	@Override
-	public EnumSet<InteractiveElement> getManagedTypes() {
-		return types;
-	}
+  @Override
+  public EnumSet<InteractiveElement> getManagedTypes() {
+    return types;
+  }
 
-	public void release() {
-		view.removeListener("Mouse", this);
-		view.removeListener("MouseMotion", this);
-	}
+  @Override
+  public void release() {
+    view.removeListener("Mouse", this);
+    view.removeListener("MouseMotion", this);
+  }
 
-	// Command
+  // Command
 
-	protected void mouseButtonPress(MouseEvent event) {
-		view.requireFocus();
+  protected void mouseButtonPress(MouseEvent event) {
+    view.requireFocus();
 
-		// Unselect all.
+    // Unselect all.
 
-		if (!event.isShiftDown()) {
-			graph.nodes().filter(n -> n.hasAttribute("ui.selected")).forEach(n -> n.removeAttribute("ui.selected"));
-			graph.sprites().filter(s -> s.hasAttribute("ui.selected")).forEach(s -> s.removeAttribute("ui.selected"));
-            graph.edges().filter(e -> e.hasAttribute("ui.selected")).forEach(e -> e.removeAttribute("ui.selected"));
-		}
-	}
+    if (!event.isShiftDown()) {
+      graph.nodes().filter(n -> n.hasAttribute("ui.selected")).forEach(n -> n.removeAttribute("ui.selected"));
+      graph.sprites().filter(s -> s.hasAttribute("ui.selected")).forEach(s -> s.removeAttribute("ui.selected"));
+      graph.edges().filter(e -> e.hasAttribute("ui.selected")).forEach(e -> e.removeAttribute("ui.selected"));
+    }
+  }
 
-	protected void mouseButtonRelease(MouseEvent event,
-									  Iterable<GraphicElement> elementsInArea) {
-		for (GraphicElement element : elementsInArea) {
-			if (!element.hasAttribute("ui.selected"))
-				element.setAttribute("ui.selected");
-		}
-	}
+  protected void mouseButtonRelease(MouseEvent event, Iterable<GraphicElement> elementsInArea) {
+    for (GraphicElement element : elementsInArea) {
+      if (!element.hasAttribute("ui.selected")) {
+        element.setAttribute("ui.selected");
+      }
+    }
+  }
 
-	protected void mouseButtonPressOnElement(GraphicElement element,
-											 MouseEvent event) {
-		view.freezeElement(element, true);
-		if (event.getButton() == 3) {
-			element.setAttribute("ui.selected");
-		} else {
-			element.setAttribute("ui.clicked");
-		}
-	}
+  protected void mouseButtonPressOnElement(GraphicElement element, MouseEvent event) {
+    view.freezeElement(element, true);
+    if (event.getButton() == 3) {
+      element.setAttribute("ui.selected");
+    } else {
+      element.setAttribute("ui.clicked");
+    }
+  }
 
-	protected void elementMoving(GraphicElement element, MouseEvent event) {
-		view.moveElementAtPx(element, event.getX(), event.getY());
-	}
+  protected void elementMoving(GraphicElement element, MouseEvent event) {
+    view.moveElementAtPx(element, event.getX(), event.getY());
+  }
 
-	protected void mouseButtonReleaseOffElement(GraphicElement element,
-												MouseEvent event) {
-		view.freezeElement(element, false);
-		if (event.getButton() != 3) {
-			element.removeAttribute("ui.clicked");
-		} else {
-		}
-	}
+  protected void mouseButtonReleaseOffElement(GraphicElement element, MouseEvent event) {
+    view.freezeElement(element, false);
+    if (event.getButton() != 3) {
+      element.removeAttribute("ui.clicked");
+    } else {
+    }
+  }
 
-	// Mouse Listener
+  // Mouse Listener
 
-	protected GraphicElement curElement;
+  protected GraphicElement curElement;
 
-	protected float x1, y1;
+  protected float x1, y1;
 
-	public void mouseClicked(MouseEvent event) {
-		// NOP
-	}
+  @Override
+  public void mouseClicked(MouseEvent event) {
+    // NOP
+  }
 
-	public void mousePressed(MouseEvent event) {
-		curElement = view.findGraphicElementAt(types,event.getX(), event.getY());
+  @Override
+  public void mousePressed(MouseEvent event) {
+    curElement = view.findGraphicElementAt(types, event.getX(), event.getY());
 
-		if (curElement != null) {
-			mouseButtonPressOnElement(curElement, event);
-		} else {
-			x1 = event.getX();
-			y1 = event.getY();
-			mouseButtonPress(event);
-			view.beginSelectionAt(x1, y1);
-		}
-	}
+    if (curElement != null) {
+      mouseButtonPressOnElement(curElement, event);
+    } else {
+      x1 = event.getX();
+      y1 = event.getY();
+      mouseButtonPress(event);
+      view.beginSelectionAt(x1, y1);
+    }
+  }
 
-	public void mouseDragged(MouseEvent event) {
-		if (curElement != null) {
-			elementMoving(curElement, event);
-		} else {
-			view.selectionGrowsAt(event.getX(), event.getY());
-		}
-	}
+  @Override
+  public void mouseDragged(MouseEvent event) {
+    if (curElement != null) {
+      elementMoving(curElement, event);
+    } else {
+      view.selectionGrowsAt(event.getX(), event.getY());
+    }
+  }
 
-	public void mouseReleased(MouseEvent event) {
-		if (curElement != null) {
-			mouseButtonReleaseOffElement(curElement, event);
-			curElement = null;
-		} else {
-			float x2 = event.getX();
-			float y2 = event.getY();
-			float t;
+  @Override
+  public void mouseReleased(MouseEvent event) {
+    if (curElement != null) {
+      mouseButtonReleaseOffElement(curElement, event);
+      curElement = null;
+    } else {
+      float x2 = event.getX();
+      float y2 = event.getY();
+      float t;
 
-			if (x1 > x2) {
-				t = x1;
-				x1 = x2;
-				x2 = t;
-			}
-			if (y1 > y2) {
-				t = y1;
-				y1 = y2;
-				y2 = t;
-			}
+      if (x1 > x2) {
+        t = x1;
+        x1 = x2;
+        x2 = t;
+      }
+      if (y1 > y2) {
+        t = y1;
+        y1 = y2;
+        y2 = t;
+      }
 
-			mouseButtonRelease(event, view.allGraphicElementsIn(types,x1, y1, x2, y2));
-			view.endSelectionAt(x2, y2);
-		}
-	}
+      mouseButtonRelease(event, view.allGraphicElementsIn(types, x1, y1, x2, y2));
+      view.endSelectionAt(x2, y2);
+    }
+  }
 
-	public void mouseEntered(MouseEvent event) {
-		// NOP
-	}
+  @Override
+  public void mouseEntered(MouseEvent event) {
+    // NOP
+  }
 
-	public void mouseExited(MouseEvent event) {
-		// NOP
-	}
+  @Override
+  public void mouseExited(MouseEvent event) {
+    // NOP
+  }
 
-	public void mouseMoved(MouseEvent event) {
-		// NOP
-	}
+  @Override
+  public void mouseMoved(MouseEvent event) {
+    // NOP
+  }
 }

@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.util;
 
 import org.graphstream.stream.file.FileSinkImages;
@@ -41,50 +41,52 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 public class SwingFileSinkImages extends FileSinkImages {
-	protected BufferedImage image;
-	protected Graphics2D g2d;
-	protected SwingGraphRenderer renderer;
+  protected BufferedImage image;
+  protected Graphics2D g2d;
+  protected SwingGraphRenderer renderer;
 
-	public SwingFileSinkImages() {
-		this(OutputType.PNG, Resolutions.HD720);
-	}
+  public SwingFileSinkImages() {
+    this(OutputType.PNG, Resolutions.HD720);
+  }
 
-	public SwingFileSinkImages(OutputType outputType, Resolution resolution) {
-		this(outputType, resolution, OutputPolicy.NONE);
-	}
+  public SwingFileSinkImages(OutputType outputType, Resolution resolution) {
+    this(outputType, resolution, OutputPolicy.NONE);
+  }
 
-	public SwingFileSinkImages(OutputType type, Resolution resolution, OutputPolicy outputPolicy) {
-		super(type, resolution, outputPolicy);
+  public SwingFileSinkImages(OutputType type, Resolution resolution, OutputPolicy outputPolicy) {
+    super(type, resolution, outputPolicy);
 
-		this.renderer = new SwingGraphRenderer();
-		this.renderer.open(gg, null);
-	}
+    this.renderer = new SwingGraphRenderer();
+    this.renderer.open(gg, null);
+  }
 
-	@Override
-	protected Camera getCamera() {
-		return renderer.getCamera();
-	}
+  @Override
+  protected Camera getCamera() {
+    return renderer.getCamera();
+  }
 
-	@Override
-	protected void render() {
-		renderer.render(g2d, 0, 0, resolution.getWidth(), resolution.getHeight());
-	}
+  @Override
+  protected void render() {
+    renderer.render(g2d, 0, 0, resolution.getWidth(), resolution.getHeight());
+  }
 
-	@Override
-	protected BufferedImage getRenderedImage() {
-		return image;
-	}
+  @Override
+  protected BufferedImage getRenderedImage() {
+    return image;
+  }
 
-	@Override
-	protected void initImage() {
-		image = new BufferedImage(resolution.getWidth(), resolution.getHeight(), outputType.imageType);
-		g2d = image.createGraphics();
-	}
+  @Override
+  protected void initImage() {
+    image = new BufferedImage(resolution.getWidth(), resolution.getHeight(), outputType.imageType);
+    g2d = image.createGraphics();
+  }
 
-	@Override
-	protected void clearImage(int color) {
-		for (int x = 0; x < image.getWidth(); x++)
-			for (int y = 0; y < image.getHeight(); y++)
-				image.setRGB(x, y, color);
-	}
+  @Override
+  protected void clearImage(int color) {
+    for (int x = 0; x < image.getWidth(); x++) {
+      for (int y = 0; y < image.getHeight(); y++) {
+        image.setRGB(x, y, color);
+      }
+    }
+  }
 }

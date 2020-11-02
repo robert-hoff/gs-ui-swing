@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.shapePart;
 
 import java.awt.Color;
@@ -45,56 +45,56 @@ import org.graphstream.ui.swing.renderer.shape.swing.ShapeStroke;
 import org.graphstream.ui.swing.util.ColorManager;
 
 public class FillableLine {
-	ShapeStroke fillStroke = null ;
-	double theFillPercent = 0.0 ;
-	Color theFillColor = null ;
-	boolean plainFast = false ;
-  
-	public void fill(Graphics2D g, double width, double dynColor, java.awt.Shape shape) {
-		if(fillStroke != null) {
-		    if(plainFast) {
-				g.setColor(theFillColor);
-		        g.draw(shape);
-		    }
-		    else {
-				Stroke stroke = fillStroke.stroke(width);
-   
-				g.setColor(theFillColor);
-				g.setStroke(stroke);
-				g.draw(shape);
-			}
-		}
-	}
- 
-	public void fill(Graphics2D g, double width, java.awt.Shape shape) { fill(g, width, theFillPercent, shape); }
- 
-	public void configureFillableLineForGroup(Backend bck, Style style, DefaultCamera2D camera, double theSize) {
-		fillStroke = ShapeStroke.strokeForConnectorFill( style );
-  	  	plainFast = (style.getSizeMode() == StyleConstants.SizeMode.NORMAL); 
-		theFillColor = ColorManager.getFillColor(style, 0);
-		bck.graphics2D().setColor(theFillColor);
-		if(fillStroke != null)
-			bck.graphics2D().setStroke(fillStroke.stroke(theSize));
-	}
+  ShapeStroke fillStroke = null;
+  double theFillPercent = 0.0;
+  Color theFillColor = null;
+  boolean plainFast = false;
 
-	public void configureFillableLineForElement( Style style, DefaultCamera2D camera, GraphicElement element ) {
-		theFillPercent = 0 ;
-  	  	if( style.getFillMode() == StyleConstants.FillMode.DYN_PLAIN && element != null ) {
-  	  		
-	  	  	if ( element.getAttribute( "ui.color" ) instanceof Number ) {
-  	  			theFillPercent = (float)((Number)element.getAttribute( "ui.color" ));
-  	  			theFillColor = ShapePaint.interpolateColor( style.getFillColors(), theFillPercent ) ;
-  	  		}
-  	  		else if ( element.getAttribute( "ui.color" ) instanceof Color ) {
-  	  			theFillColor = ((Color)element.getAttribute( "ui.color" )); 
-  	  			theFillPercent = 0;	
-  	  		}
-  	  		else {
-  	  			theFillPercent = 0f;
-  	  			theFillColor = ColorManager.getFillColor(style, 0);
-  	  		}
-	  	  	
-  	  		plainFast = false;
-  	  	}
-	}
+  public void fill(Graphics2D g, double width, double dynColor, java.awt.Shape shape) {
+    if (fillStroke != null) {
+      if (plainFast) {
+        g.setColor(theFillColor);
+        g.draw(shape);
+      } else {
+        Stroke stroke = fillStroke.stroke(width);
+
+        g.setColor(theFillColor);
+        g.setStroke(stroke);
+        g.draw(shape);
+      }
+    }
+  }
+
+  public void fill(Graphics2D g, double width, java.awt.Shape shape) {
+    fill(g, width, theFillPercent, shape);
+  }
+
+  public void configureFillableLineForGroup(Backend bck, Style style, DefaultCamera2D camera, double theSize) {
+    fillStroke = ShapeStroke.strokeForConnectorFill(style);
+    plainFast = (style.getSizeMode() == StyleConstants.SizeMode.NORMAL);
+    theFillColor = ColorManager.getFillColor(style, 0);
+    bck.graphics2D().setColor(theFillColor);
+    if (fillStroke != null) {
+      bck.graphics2D().setStroke(fillStroke.stroke(theSize));
+    }
+  }
+
+  public void configureFillableLineForElement(Style style, DefaultCamera2D camera, GraphicElement element) {
+    theFillPercent = 0;
+    if (style.getFillMode() == StyleConstants.FillMode.DYN_PLAIN && element != null) {
+
+      if (element.getAttribute("ui.color") instanceof Number) {
+        theFillPercent = (float) ((Number) element.getAttribute("ui.color"));
+        theFillColor = ShapePaint.interpolateColor(style.getFillColors(), theFillPercent);
+      } else if (element.getAttribute("ui.color") instanceof Color) {
+        theFillColor = ((Color) element.getAttribute("ui.color"));
+        theFillPercent = 0;
+      } else {
+        theFillPercent = 0f;
+        theFillColor = ColorManager.getFillColor(style, 0);
+      }
+
+      plainFast = false;
+    }
+  }
 }

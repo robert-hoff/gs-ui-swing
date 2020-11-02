@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.shapePart;
 
 import java.awt.Color;
@@ -38,17 +38,17 @@ import org.graphstream.ui.view.camera.DefaultCamera2D;
 import org.graphstream.ui.swing.util.ColorManager;
 
 public class FillableMulticolored {
-	public Color[] fillColors = null ;
-	
-	public void configureFillableMultiColoredForGroup(Style style, DefaultCamera2D camera) {
-		int count = style.getFillColorCount();
-		
-		if(fillColors == null || fillColors.length != count) {
-			fillColors = new Color[count];
-		}
-		
-		for (int i = 0 ; i < count ; i++) {
-			fillColors[i] = ColorManager.getFillColor(style, i);
-		}
-	}
+  public Color[] fillColors = null;
+
+  public void configureFillableMultiColoredForGroup(Style style, DefaultCamera2D camera) {
+    int count = style.getFillColorCount();
+
+    if (fillColors == null || fillColors.length != count) {
+      fillColors = new Color[count];
+    }
+
+    for (int i = 0; i < count; i++) {
+      fillColors[i] = ColorManager.getFillColor(style, i);
+    }
+  }
 }

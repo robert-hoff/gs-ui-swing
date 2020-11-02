@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing_viewer.util;
 
 import org.graphstream.ui.graphicGraph.GraphicElement;
@@ -42,106 +42,109 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class MouseOverMouseManager extends DefaultMouseManager {
 
-    private GraphicElement hoveredElement;
+  private GraphicElement hoveredElement;
 
-    private long hoveredElementLastChanged;
+  private long hoveredElementLastChanged;
 
-    private ReentrantLock hoverLock = new ReentrantLock();
+  private ReentrantLock hoverLock = new ReentrantLock();
 
-    private Timer hoverTimer = new Timer(true);
+  private Timer hoverTimer = new Timer(true);
 
-    private HoverTimerTask latestHoverTimerTask;
+  private HoverTimerTask latestHoverTimerTask;
 
-    private final long delay;
+  private final long delay;
 
-    /**
-     * @param delay The mouse needs to stay on an element for at least this amount of milliseconds, until the element
-     *              gets the attribute "ui.mouseOver" assigned. A value smaller or equal to zero indicates, that
-     *              the attribute is assigned without delay.
-     */
-    public MouseOverMouseManager(final long delay) {
-        super();
-        this.delay = delay;
-    }
-    
-    public MouseOverMouseManager(EnumSet<InteractiveElement> types, final long delay) {
-        super(types);
-        this.delay = delay;
-    }
-    
-    public MouseOverMouseManager(EnumSet<InteractiveElement> types) {
-        this(types, 100);
-    }
+  /**
+   * @param delay
+   *          The mouse needs to stay on an element for at least this amount of
+   *          milliseconds, until the element gets the attribute "ui.mouseOver"
+   *          assigned. A value smaller or equal to zero indicates, that the
+   *          attribute is assigned without delay.
+   */
+  public MouseOverMouseManager(final long delay) {
+    super();
+    this.delay = delay;
+  }
 
-    public MouseOverMouseManager() {
-        this(100);
-    }
+  public MouseOverMouseManager(EnumSet<InteractiveElement> types, final long delay) {
+    super(types);
+    this.delay = delay;
+  }
 
-    protected void mouseOverElement(GraphicElement element) {
-        element.setAttribute("ui.mouseOver");
-    }
+  public MouseOverMouseManager(EnumSet<InteractiveElement> types) {
+    this(types, 100);
+  }
 
-    protected void mouseLeftElement(GraphicElement element) {
-    	this.hoveredElement = null;
-        element.removeAttribute("ui.mouseOver");
-    }
+  public MouseOverMouseManager() {
+    this(100);
+  }
 
-    public void mouseMoved(MouseEvent event) {
-        try {
-            hoverLock.lockInterruptibly();
-            boolean stayedOnElement = false;
-            GraphicElement currentElement = view.findGraphicElementAt(getManagedTypes(),event.getX(), event.getY());
-            if (hoveredElement != null) {
-                stayedOnElement = currentElement == null ? false : currentElement.equals(hoveredElement);
-                if (!stayedOnElement && hoveredElement.hasAttribute("ui.mouseOver")) {
-                    mouseLeftElement(hoveredElement);
-                }
-            }
-            if (!stayedOnElement && currentElement != null) {
-                if (delay <= 0) {
-                    mouseOverElement(currentElement);
-                } else {
-                    hoveredElement = currentElement;
-                    hoveredElementLastChanged = event.getWhen();
-                    if (latestHoverTimerTask != null) {
-                        latestHoverTimerTask.cancel();
-                    }
-                    latestHoverTimerTask = new HoverTimerTask(hoveredElementLastChanged, hoveredElement);
-                    hoverTimer.schedule(latestHoverTimerTask, delay);
-                }
-            }
+  protected void mouseOverElement(GraphicElement element) {
+    element.setAttribute("ui.mouseOver");
+  }
 
-        } catch(InterruptedException iex) {
-            // NOP
-        } finally {
-            hoverLock.unlock();
+  protected void mouseLeftElement(GraphicElement element) {
+    this.hoveredElement = null;
+    element.removeAttribute("ui.mouseOver");
+  }
+
+  @Override
+  public void mouseMoved(MouseEvent event) {
+    try {
+      hoverLock.lockInterruptibly();
+      boolean stayedOnElement = false;
+      GraphicElement currentElement = view.findGraphicElementAt(getManagedTypes(), event.getX(), event.getY());
+      if (hoveredElement != null) {
+        stayedOnElement = currentElement == null ? false : currentElement.equals(hoveredElement);
+        if (!stayedOnElement && hoveredElement.hasAttribute("ui.mouseOver")) {
+          mouseLeftElement(hoveredElement);
         }
+      }
+      if (!stayedOnElement && currentElement != null) {
+        if (delay <= 0) {
+          mouseOverElement(currentElement);
+        } else {
+          hoveredElement = currentElement;
+          hoveredElementLastChanged = event.getWhen();
+          if (latestHoverTimerTask != null) {
+            latestHoverTimerTask.cancel();
+          }
+          latestHoverTimerTask = new HoverTimerTask(hoveredElementLastChanged, hoveredElement);
+          hoverTimer.schedule(latestHoverTimerTask, delay);
+        }
+      }
 
+    } catch (InterruptedException iex) {
+      // NOP
+    } finally {
+      hoverLock.unlock();
     }
 
-    private final class HoverTimerTask extends TimerTask {
+  }
 
-        private final long lastChanged;
+  private final class HoverTimerTask extends TimerTask {
 
-        private final GraphicElement element;
+    private final long lastChanged;
 
-        public HoverTimerTask(long lastChanged, GraphicElement element) {
-            this.lastChanged = lastChanged;
-            this.element = element;
-        }
+    private final GraphicElement element;
 
-        @Override
-        public void run() {
-            try {
-                hoverLock.lock();
-                if (hoveredElementLastChanged == lastChanged) {
-                    mouseOverElement(element);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            } finally {
-                hoverLock.unlock();
-            }
-        }
+    public HoverTimerTask(long lastChanged, GraphicElement element) {
+      this.lastChanged = lastChanged;
+      this.element = element;
     }
+
+    @Override
+    public void run() {
+      try {
+        hoverLock.lock();
+        if (hoveredElementLastChanged == lastChanged) {
+          mouseOverElement(element);
+        }
+      } catch (Exception ex) {
+        ex.printStackTrace();
+      } finally {
+        hoverLock.unlock();
+      }
+    }
+  }
 }

@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.viewer_swing.test;
 
 import java.awt.BorderLayout;
@@ -43,33 +43,34 @@ import org.graphstream.ui.swing_viewer.SwingViewer;
 
 @SuppressWarnings("serial")
 public class AllSwingTest extends JFrame {
-	public static void main(String[] args) {
-		AllSwingTest test = new AllSwingTest() ;
-		test.run();
-	}
-	
-	protected String styleSheet = "graph {padding: 60px;}";
+  public static void main(String[] args) {
+    AllSwingTest test = new AllSwingTest();
+    test.run();
+  }
 
-	public void run() {
-		MultiGraph g = new MultiGraph("mg");
-		SwingViewer v = new SwingViewer(g, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
-		DorogovtsevMendesGenerator gen = new DorogovtsevMendesGenerator();
-		
-		g.setAttribute("ui.antialias");
-		g.setAttribute("ui.quality");
-		g.setAttribute("ui.stylesheet", styleSheet);
-		
-		v.enableAutoLayout();
-		add((DefaultView)v.addDefaultView(false, new SwingGraphRenderer()), BorderLayout.CENTER);
-		
-		gen.addSink(g);
-		gen.begin();
-		for(int i = 0 ; i < 100 ; i++)
-			gen.nextEvents();
-		gen.end();
-		gen.removeSink(g);
-		
-		setSize( 800, 600 );
-		setVisible( true );
-	}
+  protected String styleSheet = "graph {padding: 60px;}";
+
+  public void run() {
+    MultiGraph g = new MultiGraph("mg");
+    SwingViewer v = new SwingViewer(g, SwingViewer.ThreadingModel.GRAPH_IN_GUI_THREAD);
+    DorogovtsevMendesGenerator gen = new DorogovtsevMendesGenerator();
+
+    g.setAttribute("ui.antialias");
+    g.setAttribute("ui.quality");
+    g.setAttribute("ui.stylesheet", styleSheet);
+
+    v.enableAutoLayout();
+    add((DefaultView) v.addDefaultView(false, new SwingGraphRenderer()), BorderLayout.CENTER);
+
+    gen.addSink(g);
+    gen.begin();
+    for (int i = 0; i < 100; i++) {
+      gen.nextEvents();
+    }
+    gen.end();
+    gen.removeSink(g);
+
+    setSize(800, 600);
+    setVisible(true);
+  }
 }

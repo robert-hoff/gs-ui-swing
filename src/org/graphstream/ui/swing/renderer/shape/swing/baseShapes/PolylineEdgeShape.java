@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.baseShapes;
 
 import java.awt.Graphics2D;
@@ -41,41 +41,42 @@ import org.graphstream.ui.swing.renderer.Skeleton;
 import org.graphstream.ui.swing.renderer.shape.swing.ShowCubics;
 
 public class PolylineEdgeShape extends LineConnectorShape {
-	public ShowCubics showCubics ;
-	protected Path2D.Double theShape = new java.awt.geom.Path2D.Double();
+  public ShowCubics showCubics;
+  protected Path2D.Double theShape = new java.awt.geom.Path2D.Double();
 
-	public PolylineEdgeShape() {
-		this.showCubics = new ShowCubics();
-	}
+  public PolylineEdgeShape() {
+    this.showCubics = new ShowCubics();
+  }
 
-	@Override
-	public void make(Backend backend, DefaultCamera2D camera) {
-		int n = skel.size();
-		
-		theShape.reset();
-		theShape.moveTo(skel.apply(0).x, skel.apply(0).y);
-		
-		for(int i = 0 ; i < n ; i++) {
-			theShape.lineTo(skel.apply(i).x, skel.apply(i).y);
-		}		
-	}
+  @Override
+  public void make(Backend backend, DefaultCamera2D camera) {
+    int n = skel.size();
 
-	@Override
-	public void makeShadow(Backend backend, DefaultCamera2D camera) {}
+    theShape.reset();
+    theShape.moveTo(skel.apply(0).x, skel.apply(0).y);
 
-	@Override
-	public void render(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skeleton) {
-		Graphics2D g = bck.graphics2D();
-		make(bck, camera);
-		strokableLine.stroke(g, theShape);
-		fillableLine.fill(g, theSize, theShape);
-		decorable.decorConnector(bck, camera, skel.iconAndText, element, theShape);
-	}
+    for (int i = 0; i < n; i++) {
+      theShape.lineTo(skel.apply(i).x, skel.apply(i).y);
+    }
+  }
 
-	@Override
-	public void renderShadow(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skeleton) {
-		makeShadow(bck, camera);
- 		shadowableLine.cast(bck.graphics2D(), theShape);			
-	}
+  @Override
+  public void makeShadow(Backend backend, DefaultCamera2D camera) {
+  }
+
+  @Override
+  public void render(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skeleton) {
+    Graphics2D g = bck.graphics2D();
+    make(bck, camera);
+    strokableLine.stroke(g, theShape);
+    fillableLine.fill(g, theSize, theShape);
+    decorable.decorConnector(bck, camera, skel.iconAndText, element, theShape);
+  }
+
+  @Override
+  public void renderShadow(Backend bck, DefaultCamera2D camera, GraphicElement element, Skeleton skeleton) {
+    makeShadow(bck, camera);
+    shadowableLine.cast(bck.graphics2D(), theShape);
+  }
 
 }

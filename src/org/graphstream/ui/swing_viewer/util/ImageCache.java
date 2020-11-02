@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing_viewer.util;
 
 import javax.imageio.ImageIO;
@@ -53,124 +53,124 @@ import java.util.logging.Logger;
  */
 public class ImageCache {
 
-    /**
-     * class level logger
-     */
-    private static final Logger logger = Logger.getLogger(DefaultCamera.class.getSimpleName());
+  /**
+   * class level logger
+   */
+  private static final Logger logger = Logger.getLogger(DefaultCamera.class.getSimpleName());
 
-	/**
-	 * The image cache.
-	 */
-	protected final Map<String, Image> imageCache = new TreeMap<String, Image>();
+  /**
+   * The image cache.
+   */
+  protected final Map<String, Image> imageCache = new TreeMap<String, Image>();
 
-	/**
-	 * The dummy image used to mark a not found image (and avoid trying to
-	 * reload it again and again).
-	 */
-	protected final Image dummy;
+  /**
+   * The dummy image used to mark a not found image (and avoid trying to reload it
+   * again and again).
+   */
+  protected final Image dummy;
 
-	/**
-	 * The default singleton image cache instance.
-	 */
-	protected static ImageCache defaultImageCache;
+  /**
+   * The default singleton image cache instance.
+   */
+  protected static ImageCache defaultImageCache;
 
-	/**
-	 * New empty image cache.
-	 */
-	public ImageCache() {
-		BufferedImage img = new BufferedImage(16, 16,
-				BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2 = img.createGraphics();
+  /**
+   * New empty image cache.
+   */
+  public ImageCache() {
+    BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+    Graphics2D g2 = img.createGraphics();
 
-		g2.setColor(Color.RED);
-		g2.drawRect(0, 0, img.getWidth() - 1, img.getHeight() - 1);
-		g2.drawLine(0, 0, img.getWidth() - 1, img.getHeight() - 1);
-		g2.drawLine(0, img.getHeight() - 1, img.getWidth() - 1, 0);
+    g2.setColor(Color.RED);
+    g2.drawRect(0, 0, img.getWidth() - 1, img.getHeight() - 1);
+    g2.drawLine(0, 0, img.getWidth() - 1, img.getHeight() - 1);
+    g2.drawLine(0, img.getHeight() - 1, img.getWidth() - 1, 0);
 
-		dummy = img;
-	}
+    dummy = img;
+  }
 
-	/**
-	 * Default singleton image cache instance that can be shared. This method
-	 * and singleton must be used only in the Swing thread.
-	 * 
-	 * @return The default singleton image cache instance.
-	 */
-	public static ImageCache defaultImageCache() {
-		if (defaultImageCache == null)
-			defaultImageCache = new ImageCache();
+  /**
+   * Default singleton image cache instance that can be shared. This method and
+   * singleton must be used only in the Swing thread.
+   * 
+   * @return The default singleton image cache instance.
+   */
+  public static ImageCache defaultImageCache() {
+    if (defaultImageCache == null) {
+      defaultImageCache = new ImageCache();
+    }
 
-		return defaultImageCache;
-	}
+    return defaultImageCache;
+  }
 
-	/**
-	 * Lookup an image based on its name, if found return it, else try to load
-	 * it. If an image is not found once, the cache remembers it and will not
-	 * try to reload it again if the same image is requested anew. Therefore
-	 * using getImage() is fast and smooth.
-	 * 
-	 * @param fileNameOrUrl
-	 *            A file name or an URL pointing at the image.
-	 * @return An image or null if the image cannot be found.
-	 */
-	public Image getImage(String fileNameOrUrl) {
-		return getImage(fileNameOrUrl, false);
-	}
+  /**
+   * Lookup an image based on its name, if found return it, else try to load it.
+   * If an image is not found once, the cache remembers it and will not try to
+   * reload it again if the same image is requested anew. Therefore using
+   * getImage() is fast and smooth.
+   * 
+   * @param fileNameOrUrl
+   *          A file name or an URL pointing at the image.
+   * @return An image or null if the image cannot be found.
+   */
+  public Image getImage(String fileNameOrUrl) {
+    return getImage(fileNameOrUrl, false);
+  }
 
-	/**
-	 * The same as {@link #getImage(String)} but you can force the cache to try
-	 * to reload an image that where not found before.
-	 * 
-	 * @param fileNameOrUrl
-	 *            A file name or an URL pointing at the image.
-	 * @param forceTryReload
-	 *            If true, try to reload an image that where not found before.
-	 * @return An image or null if the image cannot be found.
-	 */
-	public Image getImage(String fileNameOrUrl, boolean forceTryReload) {
-		Image ii = imageCache.get(fileNameOrUrl);
+  /**
+   * The same as {@link #getImage(String)} but you can force the cache to try to
+   * reload an image that where not found before.
+   * 
+   * @param fileNameOrUrl
+   *          A file name or an URL pointing at the image.
+   * @param forceTryReload
+   *          If true, try to reload an image that where not found before.
+   * @return An image or null if the image cannot be found.
+   */
+  public Image getImage(String fileNameOrUrl, boolean forceTryReload) {
+    Image ii = imageCache.get(fileNameOrUrl);
 
-		if (ii == dummy && !forceTryReload)
-			return null;
+    if (ii == dummy && !forceTryReload) {
+      return null;
+    }
 
-		if (ii == null) {
-			URL url = ImageCache.class.getClassLoader().getResource(
-					fileNameOrUrl);
+    if (ii == null) {
+      URL url = ImageCache.class.getClassLoader().getResource(fileNameOrUrl);
 
-			if (url != null) {
-				try {
-					ii = ImageIO.read(url);
-					imageCache.put(fileNameOrUrl, ii);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			} else {
-				try {
-					url = new URL(fileNameOrUrl);
+      if (url != null) {
+        try {
+          ii = ImageIO.read(url);
+          imageCache.put(fileNameOrUrl, ii);
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      } else {
+        try {
+          url = new URL(fileNameOrUrl);
 
-					ii = ImageIO.read(url);
-					imageCache.put(fileNameOrUrl, ii);
-				} catch (Exception e) {
-					try {
-						ii = ImageIO.read(new File(fileNameOrUrl));
-						imageCache.put(fileNameOrUrl, ii);
-					} catch (IOException ee) {
-						imageCache.put(fileNameOrUrl, dummy);
-                        logger.log(Level.WARNING, String.format("Cannot read image '%s'.", fileNameOrUrl), e);
-					}
-				}
-			}
-		}
+          ii = ImageIO.read(url);
+          imageCache.put(fileNameOrUrl, ii);
+        } catch (Exception e) {
+          try {
+            ii = ImageIO.read(new File(fileNameOrUrl));
+            imageCache.put(fileNameOrUrl, ii);
+          } catch (IOException ee) {
+            imageCache.put(fileNameOrUrl, dummy);
+            logger.log(Level.WARNING, String.format("Cannot read image '%s'.", fileNameOrUrl), e);
+          }
+        }
+      }
+    }
 
-		return ii;
-	}
+    return ii;
+  }
 
-	/**
-	 * A dummy 16x16 image.
-	 * 
-	 * @return An image.
-	 */
-	public Image getDummyImage() {
-		return dummy;
-	}
+  /**
+   * A dummy 16x16 image.
+   * 
+   * @return An image.
+   */
+  public Image getDummyImage() {
+    return dummy;
+  }
 }

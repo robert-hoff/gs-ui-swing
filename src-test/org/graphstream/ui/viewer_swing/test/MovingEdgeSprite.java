@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.viewer_swing.test;
 
 import org.graphstream.graph.Edge;
@@ -37,59 +37,64 @@ import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.Units;
 import org.graphstream.ui.spriteManager.Sprite;
 
 public class MovingEdgeSprite extends Sprite {
-	public double SPEED = 0.001f;
-	public double speed = SPEED;
-	public double off = 0f;
-	public Units units = Units.PX;
+  public double SPEED = 0.001f;
+  public double speed = SPEED;
+  public double off = 0f;
+  public Units units = Units.PX;
 
-	public void setOffsetPx( float offset ) { off = offset; units = Units.PX; }
+  public void setOffsetPx(float offset) {
+    off = offset;
+    units = Units.PX;
+  }
 
-	public void move() {
-		double p = getX();
+  public void move() {
+    double p = getX();
 
-		p += speed;
+    p += speed;
 
-		if( p < 0 || p > 1 ) {
-			Edge edge = null ;
-			if ( getAttachment() instanceof Edge)
-				edge = (Edge)getAttachment();
-		
-			if( edge != null ) {				
-				Node node = edge.getSourceNode();
-				if( p > 1 )
-					node = edge.getTargetNode() ;
-				Edge other = randomOutEdge( node );
+    if (p < 0 || p > 1) {
+      Edge edge = null;
+      if (getAttachment() instanceof Edge) {
+        edge = (Edge) getAttachment();
+      }
 
-				if(other==null) {
-				    System.err.println("node "+node.getId()+" out="+node.getOutDegree()+" null !!");
-				}
+      if (edge != null) {
+        Node node = edge.getSourceNode();
+        if (p > 1) {
+          node = edge.getTargetNode();
+        }
+        Edge other = randomOutEdge(node);
 
-				if( node.getOutDegree() > 1 ) { 
-					while( other.equals(edge) )
-						other = randomOutEdge( node );
-				}
+        if (other == null) {
+          System.err.println("node " + node.getId() + " out=" + node.getOutDegree() + " null !!");
+        }
 
-				attachToEdge( other.getId() );
-				if( node.equals(other.getSourceNode()) ) {
-					setPosition( units, 0, off, 0 );
-					speed = SPEED;
-				} else {
-					setPosition( units, 1, off, 0 );
-					speed = -SPEED;
-				}
-			}
-		} 
-		else {
-			setPosition( units, p, off, 0 );
-		}
-	}
+        if (node.getOutDegree() > 1) {
+          while (other.equals(edge)) {
+            other = randomOutEdge(node);
+          }
+        }
 
-	public Edge randomOutEdge(Node node) {
-		int min = 0 ;
-		int max = (int) node.leavingEdges().count();
-		
-		int rand = (int) (min + (Math.random() * (max - min)));
-		
-		return node.getLeavingEdge(rand);
-	}
+        attachToEdge(other.getId());
+        if (node.equals(other.getSourceNode())) {
+          setPosition(units, 0, off, 0);
+          speed = SPEED;
+        } else {
+          setPosition(units, 1, off, 0);
+          speed = -SPEED;
+        }
+      }
+    } else {
+      setPosition(units, p, off, 0);
+    }
+  }
+
+  public Edge randomOutEdge(Node node) {
+    int min = 0;
+    int max = (int) node.leavingEdges().count();
+
+    int rand = (int) (min + (Math.random() * (max - min)));
+
+    return node.getLeavingEdge(rand);
+  }
 }

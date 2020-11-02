@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.baseShapes;
 
 import org.graphstream.ui.graphicGraph.GraphicEdge;
@@ -43,20 +43,22 @@ import org.graphstream.ui.swing.renderer.shape.Decorable;
 import org.graphstream.ui.swing.renderer.shape.Shape;
 
 public abstract class ConnectorShape extends Connector implements Shape {
-	
-	public Decorable decorable ;
-	
-	public ConnectorShape() {
-		this.decorable = new Decorable();
-	}
-	
-	public void configureForGroup(Backend bck, Style style, DefaultCamera2D camera) {
-		decorable.configureDecorableForGroup(style, camera);
-		configureConnectorForGroup(style, camera);
- 	}
- 
-	public void configureForElement(Backend bck, GraphicElement element, Skeleton skel, DefaultCamera2D camera) {
-		decorable.configureDecorableForElement(bck, camera, element, skel);
-		configureConnectorForElement(camera, (GraphicEdge)element, (ConnectorSkeleton)skel /* TODO check this ! */);
-	}
+
+  public Decorable decorable;
+
+  public ConnectorShape() {
+    this.decorable = new Decorable();
+  }
+
+  @Override
+  public void configureForGroup(Backend bck, Style style, DefaultCamera2D camera) {
+    decorable.configureDecorableForGroup(style, camera);
+    configureConnectorForGroup(style, camera);
+  }
+
+  @Override
+  public void configureForElement(Backend bck, GraphicElement element, Skeleton skel, DefaultCamera2D camera) {
+    decorable.configureDecorableForElement(bck, camera, element, skel);
+    configureConnectorForElement(camera, (GraphicEdge) element, (ConnectorSkeleton) skel /* TODO check this ! */);
+  }
 }

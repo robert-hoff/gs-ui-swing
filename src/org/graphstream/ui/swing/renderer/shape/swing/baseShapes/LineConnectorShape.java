@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.baseShapes;
 
 import org.graphstream.ui.graphicGraph.GraphicElement;
@@ -41,27 +41,29 @@ import org.graphstream.ui.swing.renderer.shape.swing.shapePart.ShadowableLine;
 import org.graphstream.ui.swing.renderer.shape.swing.shapePart.StrokableLine;
 
 public abstract class LineConnectorShape extends ConnectorShape {
-	
-	public FillableLine fillableLine ;
-	public StrokableLine strokableLine;
-	public ShadowableLine shadowableLine;
-	
-	public LineConnectorShape() {
-		this.fillableLine = new FillableLine() ;
-		this.strokableLine = new StrokableLine() ;
-		this.shadowableLine = new ShadowableLine() ;
-	}
-	
-	
-	public void configureForGroup(Backend bck, Style style, DefaultCamera2D camera) {
-		super.configureForGroup(bck, style, camera);
-		fillableLine.configureFillableLineForGroup(bck, style, camera, theSize);
-		strokableLine.configureStrokableLineForGroup(style, camera);
-		shadowableLine.configureShadowableLineForGroup(style, camera);
- 	}
- 
-	public void configureForElement(Backend bck, GraphicElement element, Skeleton skel, DefaultCamera2D camera) {
-		fillableLine.configureFillableLineForElement(element.getStyle(), camera, element);
-		super.configureForElement(bck, element, skel, camera);
-	}
+
+  public FillableLine fillableLine;
+  public StrokableLine strokableLine;
+  public ShadowableLine shadowableLine;
+
+  public LineConnectorShape() {
+    this.fillableLine = new FillableLine();
+    this.strokableLine = new StrokableLine();
+    this.shadowableLine = new ShadowableLine();
+  }
+
+
+  @Override
+  public void configureForGroup(Backend bck, Style style, DefaultCamera2D camera) {
+    super.configureForGroup(bck, style, camera);
+    fillableLine.configureFillableLineForGroup(bck, style, camera, theSize);
+    strokableLine.configureStrokableLineForGroup(style, camera);
+    shadowableLine.configureShadowableLineForGroup(style, camera);
+  }
+
+  @Override
+  public void configureForElement(Backend bck, GraphicElement element, Skeleton skel, DefaultCamera2D camera) {
+    fillableLine.configureFillableLineForElement(element.getStyle(), camera, element);
+    super.configureForElement(bck, element, skel, camera);
+  }
 }

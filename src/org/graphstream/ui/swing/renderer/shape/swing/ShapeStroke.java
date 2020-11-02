@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing;
 
 import java.awt.BasicStroke;
@@ -39,130 +39,141 @@ import org.graphstream.ui.graphicGraph.stylesheet.Style;
 import org.graphstream.ui.swing.util.ColorManager;
 
 public abstract class ShapeStroke {
-	public abstract Stroke stroke(double width) ;
+  public abstract Stroke stroke(double width);
 
-	public static ShapeStroke strokeForArea(Style style) {
-		switch (style.getStrokeMode()) {
-			case PLAIN: return new PlainShapeStroke();
-			case DOTS: return new DotsShapeStroke();
-			case DASHES: return new DashesShapeStroke();
-			case DOUBLE: return new DoubleShapeStroke();
-			default: return null ;
-		}
-	}
-	
-	public static ShapeStroke strokeForConnectorFill(Style style) {
-		switch (style.getFillMode()) {
-			case PLAIN: return new PlainShapeStroke();
-			case DYN_PLAIN: return new PlainShapeStroke();
-			case NONE: return null	; // Gracefully handled by the drawing part.
-			default: return new PlainShapeStroke() ;
-		}
-	}
-	
-	public ShapeStroke strokeForConnectorStroke(Style style) {
-		return strokeForArea(style);
-	}
-	
-	public static Color strokeColor(Style style) {
-		if( style.getStrokeMode() != org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.StrokeMode.NONE ) {
-			return ColorManager.getStrokeColor( style, 0 );
-		} 
-		else {
-			return null;
-		}
-	}
-	
+  public static ShapeStroke strokeForArea(Style style) {
+    switch (style.getStrokeMode()) {
+      case PLAIN:
+        return new PlainShapeStroke();
+      case DOTS:
+        return new DotsShapeStroke();
+      case DASHES:
+        return new DashesShapeStroke();
+      case DOUBLE:
+        return new DoubleShapeStroke();
+      default:
+        return null;
+    }
+  }
+
+  public static ShapeStroke strokeForConnectorFill(Style style) {
+    switch (style.getFillMode()) {
+      case PLAIN:
+        return new PlainShapeStroke();
+      case DYN_PLAIN:
+        return new PlainShapeStroke();
+      case NONE:
+        return null; // Gracefully handled by the drawing part.
+      default:
+        return new PlainShapeStroke();
+    }
+  }
+
+  public ShapeStroke strokeForConnectorStroke(Style style) {
+    return strokeForArea(style);
+  }
+
+  public static Color strokeColor(Style style) {
+    if (style.getStrokeMode() != org.graphstream.ui.graphicGraph.stylesheet.StyleConstants.StrokeMode.NONE) {
+      return ColorManager.getStrokeColor(style, 0);
+    } else {
+      return null;
+    }
+  }
+
 }
 
 class PlainShapeStroke extends ShapeStroke {
-	private double oldWidth = 0.0 ;
-	private Stroke oldStroke = null ;
-	
-	@Override
-	public Stroke stroke(double width) {
-		if( width == oldWidth ) {
-			if( oldStroke == null ) 
-				oldStroke = new BasicStroke( (float)width/*, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL*/ )	;// WTF ??
-			return oldStroke;
-		} 
-		else {
-			oldWidth  = width;
-			oldStroke = new BasicStroke( (float)width/*, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL*/ );
-			return oldStroke;
-		}
-	}
+  private double oldWidth = 0.0;
+  private Stroke oldStroke = null;
+
+  @Override
+  public Stroke stroke(double width) {
+    if (width == oldWidth) {
+      if (oldStroke == null) {
+        oldStroke = new BasicStroke((float) width/* , BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL */ );// WTF ??
+      }
+      return oldStroke;
+    } else {
+      oldWidth = width;
+      oldStroke = new BasicStroke((float) width/* , BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL */ );
+      return oldStroke;
+    }
+  }
 }
 
 class DotsShapeStroke extends ShapeStroke {
-	private double oldWidth = 0.0 ;
-	private Stroke oldStroke = null ;
-	
-	@Override
-	public Stroke stroke(double width) {
-		if( width == oldWidth ) {
-			if( oldStroke == null ) {
-				float[] f = {(float)width, (float)width} ;
-				oldStroke = new BasicStroke( (float)width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0); // WTF ??
-			}
-			return oldStroke;
-		} else {
-			oldWidth = width;
-			float[] f = {(float)width, (float)width} ;
-			oldStroke = new BasicStroke( (float)width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0);
-			return oldStroke;
-		}
-	}
+  private double oldWidth = 0.0;
+  private Stroke oldStroke = null;
+
+  @Override
+  public Stroke stroke(double width) {
+    if (width == oldWidth) {
+      if (oldStroke == null) {
+        float[] f = { (float) width, (float) width };
+        oldStroke = new BasicStroke((float) width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0); // WTF ??
+      }
+      return oldStroke;
+    } else {
+      oldWidth = width;
+      float[] f = { (float) width, (float) width };
+      oldStroke = new BasicStroke((float) width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0);
+      return oldStroke;
+    }
+  }
 }
 
 class DashesShapeStroke extends ShapeStroke {
-	private double oldWidth = 0.0 ;
-	private Stroke oldStroke = null ;
-	
-	@Override
-	public Stroke stroke(double width) {
-		if( width == oldWidth ) {
-			if( oldStroke == null ){
-				float[] f = {(float)(3*width), (float)(3*width)};
-				oldStroke = new BasicStroke( (float)width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0); // WTF ??
-			}
-			return oldStroke ;
-		} else {
-			oldWidth = width ;
-			float[] f = {(float)(3*width), (float)(3*width)};
-			oldStroke = new BasicStroke( (float)width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0);
-			return oldStroke ;
-		}
-	}	
+  private double oldWidth = 0.0;
+  private Stroke oldStroke = null;
+
+  @Override
+  public Stroke stroke(double width) {
+    if (width == oldWidth) {
+      if (oldStroke == null) {
+        float[] f = { (float) (3 * width), (float) (3 * width) };
+        oldStroke = new BasicStroke((float) width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0); // WTF ??
+      }
+      return oldStroke;
+    } else {
+      oldWidth = width;
+      float[] f = { (float) (3 * width), (float) (3 * width) };
+      oldStroke = new BasicStroke((float) width, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10, f, 0);
+      return oldStroke;
+    }
+  }
 }
 
 class DoubleShapeStroke extends ShapeStroke {
-	private double oldWidth = 0.0 ;
-	private Stroke oldStroke = null ;
-	
-	@Override
-	public Stroke stroke(double width) {
-		if(width == oldWidth) {
-            if(oldStroke == null) 
-            	oldStroke = new CompositeStroke(new BasicStroke((float)width*3), new BasicStroke((float)width));
-            return oldStroke;
-        } else {
-            oldWidth = width;
-            oldStroke = new CompositeStroke(new BasicStroke((float)width*2), new BasicStroke((float)width));
-            return oldStroke;
-        }
-	}
-	
-	class CompositeStroke implements Stroke {
-		private Stroke stroke1 ;
-		private Stroke stroke2 ;
-		
-		public CompositeStroke(Stroke stroke1, Stroke stroke2) {
-			this.stroke1 = stroke1 ;
-			this.stroke2 = stroke2 ;
-		}
-    	public java.awt.Shape createStrokedShape(java.awt.Shape shape) {
-    		return stroke2.createStrokedShape(stroke1.createStrokedShape(shape));
-    	}
+  private double oldWidth = 0.0;
+  private Stroke oldStroke = null;
+
+  @Override
+  public Stroke stroke(double width) {
+    if (width == oldWidth) {
+      if (oldStroke == null) {
+        oldStroke = new CompositeStroke(new BasicStroke((float) width * 3), new BasicStroke((float) width));
+      }
+      return oldStroke;
+    } else {
+      oldWidth = width;
+      oldStroke = new CompositeStroke(new BasicStroke((float) width * 2), new BasicStroke((float) width));
+      return oldStroke;
     }
+  }
+
+  class CompositeStroke implements Stroke {
+    private Stroke stroke1;
+    private Stroke stroke2;
+
+    public CompositeStroke(Stroke stroke1, Stroke stroke2) {
+      this.stroke1 = stroke1;
+      this.stroke2 = stroke2;
+    }
+
+    @Override
+    public java.awt.Shape createStrokedShape(java.awt.Shape shape) {
+      return stroke2.createStrokedShape(stroke1.createStrokedShape(shape));
+    }
+  }
 }

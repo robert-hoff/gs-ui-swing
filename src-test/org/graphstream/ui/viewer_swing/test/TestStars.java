@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.viewer_swing.test;
 
 import org.graphstream.graph.Edge;
@@ -46,197 +46,188 @@ import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 
-public class TestStars implements  ViewerListener {
-	public static void main(String[] args) {
-		(new TestStars()).run();
-	}
+public class TestStars implements ViewerListener {
+  public static void main(String[] args) {
+    (new TestStars()).run();
+  }
 
-	boolean loop = true ;
-	private void run() {
-		MultiGraph	graph  = new MultiGraph( "TestSprites" );
-		
-		Viewer viewer = new SwingViewer( graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD );
-		ViewerPipe pipeIn = viewer.newViewerPipe();
-		viewer.addView( "view1", new SwingGraphRenderer() );
+  boolean loop = true;
 
-		pipeIn.addAttributeSink( graph );
-		pipeIn.addViewerListener( this );
-		pipeIn.pump();
+  private void run() {
+    MultiGraph graph = new MultiGraph("TestSprites");
 
-		graph.setAttribute( "ui.stylesheet", styleSheet );
-		graph.setAttribute( "ui.antialias" );
-		graph.setAttribute( "ui.quality" );
-		
-		Node A = graph.addNode( "A" );
-		Node B = graph.addNode( "B" );
-		Node C = graph.addNode( "C" );
-		Node D = graph.addNode( "D" );
-		Node E = graph.addNode( "E" );
-		
-		graph.addEdge( "AB", "A", "B" );
-		graph.addEdge( "BC", "B", "C" );
-		graph.addEdge( "CD", "C", "D" );
-		graph.addEdge( "DA", "D", "A" );
-		graph.addEdge( "DE", "D", "E" );
-		graph.addEdge( "EB", "E", "B" );
+    Viewer viewer = new SwingViewer(graph, SwingViewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
+    ViewerPipe pipeIn = viewer.newViewerPipe();
+    viewer.addView("view1", new SwingGraphRenderer());
 
-		A.setAttribute("xyz", new double[] { 0, 1, 0 });
-		B.setAttribute("xyz", new double[] { 1.5, 1, 0 });
-		C.setAttribute("xyz", new double[] { 1, 0, 0 });
-		D.setAttribute("xyz", new double[] { 0, 0, 0 });
-		E.setAttribute("xyz", new double[] { 0.4, 0.6, 0 });
+    pipeIn.addAttributeSink(graph);
+    pipeIn.addViewerListener(this);
+    pipeIn.pump();
 
-		SpriteManager sman = new SpriteManager( graph );
+    graph.setAttribute("ui.stylesheet", styleSheet);
+    graph.setAttribute("ui.antialias");
+    graph.setAttribute("ui.quality");
 
-		sman.setSpriteFactory( new MySpriteFactory() );
+    Node A = graph.addNode("A");
+    Node B = graph.addNode("B");
+    Node C = graph.addNode("C");
+    Node D = graph.addNode("D");
+    Node E = graph.addNode("E");
 
-		MySprite s1 = (MySprite)sman.addSprite( "S1" );
-		MySprite s2 = (MySprite)sman.addSprite( "S2" );
-		MySprite s3 = (MySprite)sman.addSprite( "S3" );
+    graph.addEdge("AB", "A", "B");
+    graph.addEdge("BC", "B", "C");
+    graph.addEdge("CD", "C", "D");
+    graph.addEdge("DA", "D", "A");
+    graph.addEdge("DE", "D", "E");
+    graph.addEdge("EB", "E", "B");
 
-		s1.attachToEdge( "AB" );
-		s2.attachToEdge( "CD" );
-		s3.attachToEdge( "DA" );
+    A.setAttribute("xyz", new double[] { 0, 1, 0 });
+    B.setAttribute("xyz", new double[] { 1.5, 1, 0 });
+    C.setAttribute("xyz", new double[] { 1, 0, 0 });
+    D.setAttribute("xyz", new double[] { 0, 0, 0 });
+    E.setAttribute("xyz", new double[] { 0.4, 0.6, 0 });
 
-		while( loop ) {
-			pipeIn.pump();
-			s1.move();
-			s2.move();
-			s3.move();
-			sleep( 10 );
-		}
-		
-		System.out.println( "bye bye" );
-		System.exit(0);
-	}
-	
-	protected void sleep( long ms ) {
-		try {
-			Thread.sleep( ms );
-		} catch (InterruptedException e) { e.printStackTrace(); }
-	}
-	
-	// Viewer Listener Interface
-	
-	public void viewClosed( String id ) { loop = false ;}
+    SpriteManager sman = new SpriteManager(graph);
 
-	public void buttonPushed( String id ) {
-		if( id == "quit" )
- 			loop = false;
-	}
+    sman.setSpriteFactory(new MySpriteFactory());
 
- 	public void buttonReleased( String id ) {}
+    MySprite s1 = (MySprite) sman.addSprite("S1");
+    MySprite s2 = (MySprite) sman.addSprite("S2");
+    MySprite s3 = (MySprite) sman.addSprite("S3");
 
- 	private String styleSheet = 
- 			"graph {"+
-			"	canvas-color: black;"+
-			"		fill-mode: gradient-vertical;"+
-			"		fill-color: black, #004;"+
-			"		padding: 60px;"+
-			"	}"+
-			"node {"+
-			"	shape: circle;"+
-			"	size: 14px;"+
-			"	fill-mode: gradient-radial;"+
-			"	fill-color: #FFFA, #FFF0;"+
-			"	stroke-mode: none;"+
-			"	shadow-mode: gradient-radial;"+
-			"	shadow-color: #FFF9, #FFF0;"+
-			"	shadow-width: 10px;"+
-			"	shadow-offset: 0px, 0px;"+
-			"}"+
-			"node:clicked {"+
-			"	fill-color: #F00A, #F000;"+
-			"}"+
-			"node:selected {"+
-			"	fill-color: #00FA, #00F0;"+
-			"}"+
-			"edge {"+
-			"	shape: line;"+
-			"	size: 1px;"+
-			"	fill-color: #FFF3;"+
-			"	fill-mode: plain;"+
-			"	arrow-shape: none;"+
-			"}"+
-			"sprite {"+
-			"	shape: circle;"+
-			"	fill-mode: gradient-radial;"+
-			"	fill-color: #FFF8, #FFF0;"+
-			"}";
- 	
- 	class MySpriteFactory extends SpriteFactory {
- 		
- 		@Override
- 		public Sprite newSprite(String identifier, SpriteManager manager, Values position) {
- 			if( position != null )
-				return new MySprite( identifier, manager, position );
- 			else
- 				return new MySprite( identifier, manager );
- 		}
-	}
- 	
- 	class MySprite extends Sprite {
- 		public MySprite(String id, SpriteManager manager, Values pos) {
- 			super(id, manager, pos);
- 		}
- 		
- 		public MySprite(String id, SpriteManager manager) {
-			this(id, manager, new Values(StyleConstants.Units.GU, 0, 0, 0));
-		}
- 		
- 		double SPEED = 0.005f;
- 		double speed = SPEED;
- 		double off = 0f;
- 		Units units = Units.PX;
+    s1.attachToEdge("AB");
+    s2.attachToEdge("CD");
+    s3.attachToEdge("DA");
 
- 		public void setOffsetPx( float offset ) { off = offset; units = Units.PX ;}
+    while (loop) {
+      pipeIn.pump();
+      s1.move();
+      s2.move();
+      s3.move();
+      sleep(10);
+    }
 
- 		public void move() {
- 			double p = getX();
+    System.out.println("bye bye");
+    System.exit(0);
+  }
 
- 			p += speed;
+  protected void sleep(long ms) {
+    try {
+      Thread.sleep(ms);
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+  }
 
- 			if( p < 0 || p > 1 ) {
- 				Edge edge = (Edge) getAttachment();
- 				
- 				if( edge != null ) {
- 					Node node = edge.getSourceNode(); 
- 					if( p > 1 ) 
- 						node = edge.getTargetNode(); 
- 					
- 					Edge other = randomOutEdge( node );
- 							
- 					if( node.getOutDegree() > 1 ) { 
- 						while( other == edge ) 
- 							other = randomOutEdge( node ); 
- 					}
+  // Viewer Listener Interface
 
- 					attachToEdge( other.getId() );
- 					if( node == other.getSourceNode() ) {
- 						setPosition( units, 0, off, 0 );
- 						speed = SPEED;
- 					} else {
- 						setPosition( units, 1, off, 0 );
- 						speed = -SPEED;
- 					}
- 				}
- 			} 
- 			else {
- 				setPosition( units, p, off, 0 );
- 			}
- 		}
+  @Override
+  public void viewClosed(String id) {
+    loop = false;
+  }
 
- 		public Edge randomOutEdge(Node node) {
- 			int min = 0 ;
- 			int max = (int) node.leavingEdges().count();
- 			
- 			int rand = (int) (min + (Math.random() * (max - min)));
- 			
- 			return node.getLeavingEdge(rand);
- 		}
- 	}
- 	
- 	public void mouseOver(String id){}
+  @Override
+  public void buttonPushed(String id) {
+    if (id == "quit") {
+      loop = false;
+    }
+  }
 
-	public void mouseLeft(String id){}
+  @Override
+  public void buttonReleased(String id) {
+  }
+
+  private String styleSheet = "graph {" + "	canvas-color: black;" + "		fill-mode: gradient-vertical;"
+      + "		fill-color: black, #004;" + "		padding: 60px;" + "	}" + "node {" + "	shape: circle;" + "	size: 14px;"
+      + "	fill-mode: gradient-radial;" + "	fill-color: #FFFA, #FFF0;" + "	stroke-mode: none;"
+      + "	shadow-mode: gradient-radial;" + "	shadow-color: #FFF9, #FFF0;" + "	shadow-width: 10px;"
+      + "	shadow-offset: 0px, 0px;" + "}" + "node:clicked {" + "	fill-color: #F00A, #F000;" + "}" + "node:selected {"
+      + "	fill-color: #00FA, #00F0;" + "}" + "edge {" + "	shape: line;" + "	size: 1px;" + "	fill-color: #FFF3;"
+      + "	fill-mode: plain;" + "	arrow-shape: none;" + "}" + "sprite {" + "	shape: circle;"
+      + "	fill-mode: gradient-radial;" + "	fill-color: #FFF8, #FFF0;" + "}";
+
+  class MySpriteFactory extends SpriteFactory {
+
+    @Override
+    public Sprite newSprite(String identifier, SpriteManager manager, Values position) {
+      if (position != null) {
+        return new MySprite(identifier, manager, position);
+      } else {
+        return new MySprite(identifier, manager);
+      }
+    }
+  }
+
+  class MySprite extends Sprite {
+    public MySprite(String id, SpriteManager manager, Values pos) {
+      super(id, manager, pos);
+    }
+
+    public MySprite(String id, SpriteManager manager) {
+      this(id, manager, new Values(StyleConstants.Units.GU, 0, 0, 0));
+    }
+
+    double SPEED = 0.005f;
+    double speed = SPEED;
+    double off = 0f;
+    Units units = Units.PX;
+
+    public void setOffsetPx(float offset) {
+      off = offset;
+      units = Units.PX;
+    }
+
+    public void move() {
+      double p = getX();
+
+      p += speed;
+
+      if (p < 0 || p > 1) {
+        Edge edge = (Edge) getAttachment();
+
+        if (edge != null) {
+          Node node = edge.getSourceNode();
+          if (p > 1) {
+            node = edge.getTargetNode();
+          }
+
+          Edge other = randomOutEdge(node);
+
+          if (node.getOutDegree() > 1) {
+            while (other == edge) {
+              other = randomOutEdge(node);
+            }
+          }
+
+          attachToEdge(other.getId());
+          if (node == other.getSourceNode()) {
+            setPosition(units, 0, off, 0);
+            speed = SPEED;
+          } else {
+            setPosition(units, 1, off, 0);
+            speed = -SPEED;
+          }
+        }
+      } else {
+        setPosition(units, p, off, 0);
+      }
+    }
+
+    public Edge randomOutEdge(Node node) {
+      int min = 0;
+      int max = (int) node.leavingEdges().count();
+
+      int rand = (int) (min + (Math.random() * (max - min)));
+
+      return node.getLeavingEdge(rand);
+    }
+  }
+
+  @Override
+  public void mouseOver(String id) {
+  }
+
+  @Override
+  public void mouseLeft(String id) {
+  }
 }

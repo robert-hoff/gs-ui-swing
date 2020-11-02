@@ -23,24 +23,24 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.viewer_swing.test;
 
 import org.graphstream.ui.spriteManager.Sprite;
 
 public class DataSprite extends Sprite {
-	public void setData( float[] values ) {
-		float[] data = new float[values.length];
-		
-		for (int i = 0 ; i < values.length ; i++) {
-			data[i] = values[i];
-		}
-		
-		setAttribute( "ui.pie-values", data );
-	}
+  public void setData(float[] values) {
+    float[] data = new float[values.length];
+
+    for (int i = 0; i < values.length; i++) {
+      data[i] = values[i];
+    }
+
+    setAttribute("ui.pie-values", data);
+  }
 }

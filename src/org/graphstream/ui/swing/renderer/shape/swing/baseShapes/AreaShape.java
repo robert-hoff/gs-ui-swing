@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing.renderer.shape.swing.baseShapes;
 
 import org.graphstream.ui.graphicGraph.GraphicElement;
@@ -45,31 +45,33 @@ import org.graphstream.ui.swing.renderer.shape.swing.shapePart.Shadowable;
 import org.graphstream.ui.swing.renderer.shape.swing.shapePart.Strokable;
 
 public abstract class AreaShape extends Decorable implements Shape {
-	
-	public Fillable fillable ;
-	public Strokable strokable ;
-	public Shadowable shadowable ;
-	public Area area ;
-	
-	public AreaShape() {
-		this.fillable = new Fillable();
-		this.strokable = new Strokable();
-		this.shadowable = new Shadowable();
-		this.area = new Area();
-	}
-	
-	
-	public void configureForGroup(Backend bck, Style style, DefaultCamera2D camera) {
- 	  	fillable.configureFillableForGroup(bck, style, camera);
- 	  	strokable.configureStrokableForGroup(style, camera);
- 	  	shadowable.configureShadowableForGroup(style, camera);
- 	  	configureDecorableForGroup(style, camera);
- 	  	area.configureAreaForGroup(style, camera);
- 	}
- 
-	public void configureForElement(Backend bck, GraphicElement element, Skeleton skel, DefaultCamera2D camera) {
-		fillable.configureFillableForElement(element.getStyle(), camera, element);
-		configureDecorableForElement(bck, camera, element, skel);
-		area.configureAreaForElement(bck, camera, (AreaSkeleton)skel, element, theDecor);
-	}
+
+  public Fillable fillable;
+  public Strokable strokable;
+  public Shadowable shadowable;
+  public Area area;
+
+  public AreaShape() {
+    this.fillable = new Fillable();
+    this.strokable = new Strokable();
+    this.shadowable = new Shadowable();
+    this.area = new Area();
+  }
+
+
+  @Override
+  public void configureForGroup(Backend bck, Style style, DefaultCamera2D camera) {
+    fillable.configureFillableForGroup(bck, style, camera);
+    strokable.configureStrokableForGroup(style, camera);
+    shadowable.configureShadowableForGroup(style, camera);
+    configureDecorableForGroup(style, camera);
+    area.configureAreaForGroup(style, camera);
+  }
+
+  @Override
+  public void configureForElement(Backend bck, GraphicElement element, Skeleton skel, DefaultCamera2D camera) {
+    fillable.configureFillableForElement(element.getStyle(), camera, element);
+    configureDecorableForElement(bck, camera, element, skel);
+    area.configureAreaForElement(bck, camera, (AreaSkeleton) skel, element, theDecor);
+  }
 }

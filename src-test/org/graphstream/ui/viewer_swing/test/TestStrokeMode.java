@@ -23,62 +23,43 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.viewer_swing.test;
 
 import org.graphstream.graph.implementations.MultiGraph;
 
 public class TestStrokeMode {
-	public static void main(String[] args) {
-		System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
-		(new TestStrokeMode()).run();
-	}
+  public static void main(String[] args) {
+    System.setProperty("org.graphstream.ui", "org.graphstream.ui.swing.util.Display");
+    (new TestStrokeMode()).run();
+  }
 
-	private void run() {
-		MultiGraph graph = new MultiGraph("stroke");
+  private void run() {
+    MultiGraph graph = new MultiGraph("stroke");
 
-		graph.setAttribute("ui.quality");
-	    graph.setAttribute("ui.antialias");
-	    graph.setAttribute("ui.stylesheet", styleSheet);
-	    graph.display();
-	    graph.addNode("A");
-	    graph.addNode("B");
-	    graph.addNode("C");
-	    graph.addNode("D");
-	    graph.addEdge("AB", "A", "B");
-	    graph.addEdge("BC", "B", "C");
-	    graph.addEdge("CA", "C", "A");
-	    graph.addEdge("AD", "A", "D");
-	    graph.forEach(node -> node.setAttribute("ui.label", node.getId()));
-	}
-	
-	private String styleSheet =
-    		"node {"+
-			"	fill-color: white;"+
-			"	fill-mode: plain;"+
-			"	stroke-mode: dashes;"+
-			"	stroke-width: 1px;"+
-			"	stroke-color: red;"+
-			"	size: 20px;"+
-			"}"+
-			"node#C {"+
-			"	stroke-mode: double;"+
-			"}"+
-			"node#D {"+
-			"	fill-color: gray; "+
-			"	stroke-mode: plain; " +
-			"	stroke-color: blue; "+
-			"}"+
-			"edge {"+
-			"	fill-mode: none;"+
-			"	size: 0px;"+
-			"	stroke-mode: dashes;"+
-			"	stroke-width: 1px;"+
-			"	stroke-color: red;"+
-			"}";
+    graph.setAttribute("ui.quality");
+    graph.setAttribute("ui.antialias");
+    graph.setAttribute("ui.stylesheet", styleSheet);
+    graph.display();
+    graph.addNode("A");
+    graph.addNode("B");
+    graph.addNode("C");
+    graph.addNode("D");
+    graph.addEdge("AB", "A", "B");
+    graph.addEdge("BC", "B", "C");
+    graph.addEdge("CA", "C", "A");
+    graph.addEdge("AD", "A", "D");
+    graph.forEach(node -> node.setAttribute("ui.label", node.getId()));
+  }
+
+  private String styleSheet = "node {" + "	fill-color: white;" + "	fill-mode: plain;" + "	stroke-mode: dashes;"
+      + "	stroke-width: 1px;" + "	stroke-color: red;" + "	size: 20px;" + "}" + "node#C {" + "	stroke-mode: double;"
+      + "}" + "node#D {" + "	fill-color: gray; " + "	stroke-mode: plain; " + "	stroke-color: blue; " + "}" + "edge {"
+      + "	fill-mode: none;" + "	size: 0px;" + "	stroke-mode: dashes;" + "	stroke-width: 1px;" + "	stroke-color: red;"
+      + "}";
 }

@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing_viewer;
 
 import java.awt.event.ActionEvent;
@@ -94,219 +94,231 @@ import org.graphstream.ui.view.Viewer;
  */
 public class SwingViewer extends Viewer implements ActionListener {
 
-	// Attributes
+  // Attributes
 
-	/**
-	 * Timer in the Swing thread.
-	 */
-	protected Timer timer ;
+  /**
+   * Timer in the Swing thread.
+   */
+  protected Timer timer;
 
-	/**
-	 * Delay in milliseconds between frames.
-	 */
-	protected int delay = 40;
-	
-	/**
-	 * Name of the default view.
-	 */
-	public static String DEFAULT_VIEW_ID = "defaultView";
+  /**
+   * Delay in milliseconds between frames.
+   */
+  protected int delay = 40;
 
-	public String getDefaultID() {
-		return DEFAULT_VIEW_ID ;
-	}
-	
-	// Construction
+  /**
+   * Name of the default view.
+   */
+  public static String DEFAULT_VIEW_ID = "defaultView";
 
-	/**
-	 * The graph or source of graph events is in another thread or on another
-	 * machine, but the pipe already exists. The graphic graph displayed by this
-	 * viewer is created.
-	 * 
-	 * @param source
-	 *            The source of graph events.
-	 */
-	public SwingViewer(ProxyPipe source) {
-		graphInAnotherThread = true;
-		init(new GraphicGraph(newGGId()), source, (Source) null);
-	}
+  @Override
+  public String getDefaultID() {
+    return DEFAULT_VIEW_ID;
+  }
 
-	/**
-	 * We draw a pre-existing graphic graph. The graphic graph is maintained by
-	 * its creator.
-	 * 
-	 * @param graph
-	 *            THe graph to draw.
-	 */
-	public SwingViewer(GraphicGraph graph) {
-		graphInAnotherThread = false;
-		init(graph, (ProxyPipe) null, (Source) null);
-	}
+  // Construction
 
-	/**
-	 * New viewer on an existing graph. The viewer always run in the Swing
-	 * thread, therefore, you must specify how it will take graph events from
-	 * the graph you give. If the graph you give will be accessed only from the
-	 * Swing thread use ThreadingModel.GRAPH_IN_GUI_THREAD. If the graph you use
-	 * is accessed in another thread use ThreadingModel.GRAPH_IN_ANOTHER_THREAD.
-	 * This last scheme is more powerful since it allows to run algorithms on
-	 * the graph in parallel with the viewer.
-	 * 
-	 * @param graph
-	 *            The graph to render.
-	 * @param threadingModel
-	 *            The threading model.
-	 */
-	public SwingViewer(Graph graph, ThreadingModel threadingModel) {
-		switch (threadingModel) {
-		case GRAPH_IN_GUI_THREAD:
-			graphInAnotherThread = false;
-			init(new GraphicGraph(newGGId()), (ProxyPipe) null, graph);
-			enableXYZfeedback(true);
-			break;
-		case GRAPH_IN_ANOTHER_THREAD:
-			graphInAnotherThread = true;
+  /**
+   * The graph or source of graph events is in another thread or on another
+   * machine, but the pipe already exists. The graphic graph displayed by this
+   * viewer is created.
+   * 
+   * @param source
+   *          The source of graph events.
+   */
+  public SwingViewer(ProxyPipe source) {
+    graphInAnotherThread = true;
+    init(new GraphicGraph(newGGId()), source, (Source) null);
+  }
 
-			ThreadProxyPipe tpp = new ThreadProxyPipe();
-			tpp.init(graph, true);
+  /**
+   * We draw a pre-existing graphic graph. The graphic graph is maintained by its
+   * creator.
+   * 
+   * @param graph
+   *          THe graph to draw.
+   */
+  public SwingViewer(GraphicGraph graph) {
+    graphInAnotherThread = false;
+    init(graph, (ProxyPipe) null, (Source) null);
+  }
 
-			init(new GraphicGraph(newGGId()), tpp, (Source) null);
-			enableXYZfeedback(false);
-			break;
-		case GRAPH_ON_NETWORK:
-			throw new RuntimeException("TO DO, sorry !:-)");
-		}
-	}
+  /**
+   * New viewer on an existing graph. The viewer always run in the Swing thread,
+   * therefore, you must specify how it will take graph events from the graph you
+   * give. If the graph you give will be accessed only from the Swing thread use
+   * ThreadingModel.GRAPH_IN_GUI_THREAD. If the graph you use is accessed in
+   * another thread use ThreadingModel.GRAPH_IN_ANOTHER_THREAD. This last scheme
+   * is more powerful since it allows to run algorithms on the graph in parallel
+   * with the viewer.
+   * 
+   * @param graph
+   *          The graph to render.
+   * @param threadingModel
+   *          The threading model.
+   */
+  public SwingViewer(Graph graph, ThreadingModel threadingModel) {
+    switch (threadingModel) {
+      case GRAPH_IN_GUI_THREAD:
+        graphInAnotherThread = false;
+        init(new GraphicGraph(newGGId()), (ProxyPipe) null, graph);
+        enableXYZfeedback(true);
+        break;
+      case GRAPH_IN_ANOTHER_THREAD:
+        graphInAnotherThread = true;
 
-	/**
-	 * Initialise the viewer.
-	 * 
-	 * @param graph
-	 *            The graphic graph.
-	 * @param ppipe
-	 *            The source of events from another thread or machine (null if
-	 *            source != null).
-	 * @param source
-	 *            The source of events from this thread (null if ppipe != null).
-	 */
-	public void init(GraphicGraph graph, ProxyPipe ppipe, Source source) {
-		this.graph = graph;
-		this.pumpPipe = ppipe;
-		this.sourceInSameThread = source;
+        ThreadProxyPipe tpp = new ThreadProxyPipe();
+        tpp.init(graph, true);
 
-		this.timer = new Timer(delay, this);
-		
-		assert ((ppipe != null && source == null) || (ppipe == null && source != null));
+        init(new GraphicGraph(newGGId()), tpp, (Source) null);
+        enableXYZfeedback(false);
+        break;
+      case GRAPH_ON_NETWORK:
+        throw new RuntimeException("TO DO, sorry !:-)");
+    }
+  }
 
-		if (pumpPipe != null)
-			pumpPipe.addSink(graph);
-		if (sourceInSameThread != null) {
-			if (source instanceof Graph)
-				replayGraph((Graph) source);
-			sourceInSameThread.addSink(graph);
-		}
-		
-		timer.setCoalesce(true);
-		timer.setRepeats(true);
-		timer.start();
-	}
+  /**
+   * Initialise the viewer.
+   * 
+   * @param graph
+   *          The graphic graph.
+   * @param ppipe
+   *          The source of events from another thread or machine (null if source
+   *          != null).
+   * @param source
+   *          The source of events from this thread (null if ppipe != null).
+   */
+  @Override
+  public void init(GraphicGraph graph, ProxyPipe ppipe, Source source) {
+    this.graph = graph;
+    this.pumpPipe = ppipe;
+    this.sourceInSameThread = source;
 
-	/**
-	 * Close definitively this viewer and all its views.
-	 */
-	public void close() {
-		synchronized (views) {
-			disableAutoLayout();
+    this.timer = new Timer(delay, this);
 
-			for (View view : views.values())
-				view.close(graph);
+    assert ((ppipe != null && source == null) || (ppipe == null && source != null));
 
-			timer.removeActionListener(this);
+    if (pumpPipe != null) {
+      pumpPipe.addSink(graph);
+    }
+    if (sourceInSameThread != null) {
+      if (source instanceof Graph) {
+        replayGraph((Graph) source);
+      }
+      sourceInSameThread.addSink(graph);
+    }
 
-			if (pumpPipe != null)
-				pumpPipe.removeSink(graph);
-			if (sourceInSameThread != null)
-				sourceInSameThread.removeSink(graph);
+    timer.setCoalesce(true);
+    timer.setRepeats(true);
+    timer.start();
+  }
 
-			graph = null;
-			pumpPipe = null;
-			sourceInSameThread = null;
-			timer = null;
-		}
-	}
+  /**
+   * Close definitively this viewer and all its views.
+   */
+  @Override
+  public void close() {
+    synchronized (views) {
+      disableAutoLayout();
 
-	// Access
+      for (View view : views.values()) {
+        view.close(graph);
+      }
 
-	/**
-	 * Create a new instance of the default graph renderer.
-	 */
-	public GraphRenderer<?, ?> newDefaultGraphRenderer() {
-		return new SwingGraphRenderer();
-	}
+      timer.removeActionListener(this);
 
-	// Command
-	
-	/**
-	 * Build the default graph view and insert it. The view identifier is
-	 * {@link #DEFAULT_VIEW_ID}. You can request the view to be open in its own
-	 * frame.
-	 * 
-	 * @param renderer
-	 * @param openInAFrame
-	 *            It true, the view is placed in a frame, else the view is only
-	 *            created and you must embed it yourself in your application.
-	 */
-	public View addDefaultView(boolean openInAFrame, GraphRenderer<?, ?> renderer) {
-		synchronized (views) {
-			View view = renderer.createDefaultView(this, getDefaultID());
-			
-			addView(view);
-			
-			if (openInAFrame)
-				view.openInAFrame(true);
+      if (pumpPipe != null) {
+        pumpPipe.removeSink(graph);
+      }
+      if (sourceInSameThread != null) {
+        sourceInSameThread.removeSink(graph);
+      }
 
-			return view;
-		}
-	}
+      graph = null;
+      pumpPipe = null;
+      sourceInSameThread = null;
+      timer = null;
+    }
+  }
 
-	/**
-	 * Called on a regular basis by the timer. Checks if some events occurred
-	 * from the graph pipe or from the layout pipe, and if the graph changed,
-	 * triggers a repaint. Never call this method, it is called by a Swing Timer
-	 * automatically.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		synchronized (views) {
-			// long t1=System.currentTimeMillis();
-			// long gsize1=graph.getNodeCount();
-			if (pumpPipe != null)
-				pumpPipe.pump();
-			// long gsize2=graph.getNodeCount();
-			// long t2=System.currentTimeMillis();
+  // Access
 
-			if (layoutPipeIn != null)
-				layoutPipeIn.pump();
-			// long t3=System.currentTimeMillis();
-			// Prevent the timer from using a empty graph to display
-			if(graph != null){
-				boolean changed = graph.graphChangedFlag();
+  /**
+   * Create a new instance of the default graph renderer.
+   */
+  @Override
+  public GraphRenderer<?, ?> newDefaultGraphRenderer() {
+    return new SwingGraphRenderer();
+  }
 
-				if (changed) {
-					computeGraphMetrics();
-					// long t4=System.currentTimeMillis();
+  // Command
 
-					for (View view : views.values())
-						view.display(graph, changed);
-				}
-				// long t5=System.currentTimeMillis();
+  /**
+   * Build the default graph view and insert it. The view identifier is
+   * {@link #DEFAULT_VIEW_ID}. You can request the view to be open in its own
+   * frame.
+   * 
+   * @param renderer
+   * @param openInAFrame
+   *          It true, the view is placed in a frame, else the view is only
+   *          created and you must embed it yourself in your application.
+   */
+  public View addDefaultView(boolean openInAFrame, GraphRenderer<?, ?> renderer) {
+    synchronized (views) {
+      View view = renderer.createDefaultView(this, getDefaultID());
 
-				graph.resetGraphChangedFlag();
-			}
-			// System.err.printf("display pump=%f layoutPump=%f metrics=%f
-			// display=%f (size delta=%d size1=%d size2=%d)%n",
-			// (t2-t1)/1000.0, (t3-t2)/1000.0, (t4-t3)/1000.0, (t5-t4)/1000.0,
-			// (gsize2-gsize1), gsize1, gsize2);
-		}
-	}
+      addView(view);
+
+      if (openInAFrame) {
+        view.openInAFrame(true);
+      }
+
+      return view;
+    }
+  }
+
+  /**
+   * Called on a regular basis by the timer. Checks if some events occurred from
+   * the graph pipe or from the layout pipe, and if the graph changed, triggers a
+   * repaint. Never call this method, it is called by a Swing Timer automatically.
+   */
+  @Override
+  public void actionPerformed(ActionEvent arg0) {
+    // TODO Auto-generated method stub
+    synchronized (views) {
+      // long t1=System.currentTimeMillis();
+      // long gsize1=graph.getNodeCount();
+      if (pumpPipe != null) {
+        pumpPipe.pump();
+        // long gsize2=graph.getNodeCount();
+        // long t2=System.currentTimeMillis();
+      }
+
+      if (layoutPipeIn != null) {
+        layoutPipeIn.pump();
+      }
+      // long t3=System.currentTimeMillis();
+      // Prevent the timer from using a empty graph to display
+      if (graph != null) {
+        boolean changed = graph.graphChangedFlag();
+
+        if (changed) {
+          computeGraphMetrics();
+          // long t4=System.currentTimeMillis();
+
+          for (View view : views.values()) {
+            view.display(graph, changed);
+          }
+        }
+        // long t5=System.currentTimeMillis();
+
+        graph.resetGraphChangedFlag();
+      }
+      // System.err.printf("display pump=%f layoutPump=%f metrics=%f
+      // display=%f (size delta=%d size1=%d size2=%d)%n",
+      // (t2-t1)/1000.0, (t3-t2)/1000.0, (t4-t3)/1000.0, (t5-t4)/1000.0,
+      // (gsize2-gsize1), gsize1, gsize2);
+    }
+  }
 }

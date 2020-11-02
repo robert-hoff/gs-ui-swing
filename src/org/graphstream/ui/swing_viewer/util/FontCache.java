@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing_viewer.util;
 
 import org.graphstream.ui.graphicGraph.stylesheet.StyleConstants;
@@ -47,78 +47,79 @@ import java.util.TreeMap;
  * </p>
  */
 public class FontCache {
-	/**
-	 * The default font.
-	 */
-	protected final Font defaultFont;
+  /**
+   * The default font.
+   */
+  protected final Font defaultFont;
 
-	/**
-	 * Cached fonts.
-	 */
-	protected final Map<String, FontSlot> cache = new TreeMap<String, FontSlot>();
+  /**
+   * Cached fonts.
+   */
+  protected final Map<String, FontSlot> cache = new TreeMap<String, FontSlot>();
 
-	/**
-	 * The default font cache.
-	 */
-	public static FontCache defaultFontCache;
+  /**
+   * The default font cache.
+   */
+  public static FontCache defaultFontCache;
 
-	/**
-	 * New empty font cache.
-	 */
-	public FontCache() {
-		defaultFont = new Font("SansSerif", Font.PLAIN, 11);
-		// This works only in JDK 1.6 :
-		// defaultFont = new Font( Font.SANS_SERIF, Font.PLAIN, 11 );
-	}
+  /**
+   * New empty font cache.
+   */
+  public FontCache() {
+    defaultFont = new Font("SansSerif", Font.PLAIN, 11);
+    // This works only in JDK 1.6 :
+    // defaultFont = new Font( Font.SANS_SERIF, Font.PLAIN, 11 );
+  }
 
-	/**
-	 * The default font.
-	 * 
-	 * @return A font.
-	 */
-	public Font getDefaultFont() {
-		return defaultFont;
-	}
+  /**
+   * The default font.
+   * 
+   * @return A font.
+   */
+  public Font getDefaultFont() {
+    return defaultFont;
+  }
 
-	/**
-	 * Default singleton instance for shared font cache. This method and cache
-	 * can only be used in the Swing thread.
-	 * 
-	 * @return The default singleton font cache instance.
-	 */
-	public static FontCache defaultFontCache() {
-		if (defaultFontCache == null)
-			defaultFontCache = new FontCache();
+  /**
+   * Default singleton instance for shared font cache. This method and cache can
+   * only be used in the Swing thread.
+   * 
+   * @return The default singleton font cache instance.
+   */
+  public static FontCache defaultFontCache() {
+    if (defaultFontCache == null) {
+      defaultFontCache = new FontCache();
+    }
 
-		return defaultFontCache;
-	}
+    return defaultFontCache;
+  }
 
-	public Font getDefaultFont(StyleConstants.TextStyle style, int size) {
-		return getFont("SansSerif", style, size);
-	}
+  public Font getDefaultFont(StyleConstants.TextStyle style, int size) {
+    return getFont("SansSerif", style, size);
+  }
 
-	/**
-	 * Lookup a font, and if not found, try to load it, if still not available,
-	 * return the default font.
-	 * 
-	 * @param name
-	 *            The font name.
-	 * @param style
-	 *            A style, taken from the styles available in the style sheets.
-	 * @param size
-	 *            The font size in points.
-	 * @return A font.
-	 */
-	public Font getFont(String name, StyleConstants.TextStyle style, int size) {
-		FontSlot slot = cache.get(name);
+  /**
+   * Lookup a font, and if not found, try to load it, if still not available,
+   * return the default font.
+   * 
+   * @param name
+   *          The font name.
+   * @param style
+   *          A style, taken from the styles available in the style sheets.
+   * @param size
+   *          The font size in points.
+   * @return A font.
+   */
+  public Font getFont(String name, StyleConstants.TextStyle style, int size) {
+    FontSlot slot = cache.get(name);
 
-		if (slot == null) {
-			slot = new FontSlot(name, style, size);
-			cache.put(name, slot);
-		}
+    if (slot == null) {
+      slot = new FontSlot(name, style, size);
+      cache.put(name, slot);
+    }
 
-		return slot.getFont(style, size);
-	}
+    return slot.getFont(style, size);
+  }
 }
 
 /**
@@ -130,80 +131,85 @@ public class FontCache {
  * </p>
  */
 class FontSlot {
-	String name;
+  String name;
 
-	public HashMap<Integer, Font> normal;
+  public HashMap<Integer, Font> normal;
 
-	public HashMap<Integer, Font> bold;
+  public HashMap<Integer, Font> bold;
 
-	public HashMap<Integer, Font> italic;
+  public HashMap<Integer, Font> italic;
 
-	public HashMap<Integer, Font> boldItalic;
+  public HashMap<Integer, Font> boldItalic;
 
-	public FontSlot(String name, StyleConstants.TextStyle style, int size) {
-		this.name = name;
-		insert(style, size);
-	}
+  public FontSlot(String name, StyleConstants.TextStyle style, int size) {
+    this.name = name;
+    insert(style, size);
+  }
 
-	protected Map<Integer, Font> mapFromStyle(StyleConstants.TextStyle style) {
-		switch (style) {
-		case BOLD:
-			if (bold == null)
-				bold = new HashMap<Integer, Font>();
-			return bold;
-		case ITALIC:
-			if (italic == null)
-				italic = new HashMap<Integer, Font>();
-			return italic;
-		case BOLD_ITALIC:
-			if (boldItalic == null)
-				boldItalic = new HashMap<Integer, Font>();
-			return boldItalic;
-		case NORMAL:
-		default:
-			if (normal == null)
-				normal = new HashMap<Integer, Font>();
-			return normal;
-		}
-	}
+  protected Map<Integer, Font> mapFromStyle(StyleConstants.TextStyle style) {
+    switch (style) {
+      case BOLD:
+        if (bold == null) {
+          bold = new HashMap<Integer, Font>();
+        }
+        return bold;
+      case ITALIC:
+        if (italic == null) {
+          italic = new HashMap<Integer, Font>();
+        }
+        return italic;
+      case BOLD_ITALIC:
+        if (boldItalic == null) {
+          boldItalic = new HashMap<Integer, Font>();
+        }
+        return boldItalic;
+      case NORMAL:
+      default:
+        if (normal == null) {
+          normal = new HashMap<Integer, Font>();
+        }
+        return normal;
+    }
+  }
 
-	protected int toJavaStyle(StyleConstants.TextStyle style) {
-		switch (style) {
-		case BOLD:
-			return Font.BOLD;
-		case ITALIC:
-			return Font.ITALIC;
-		case BOLD_ITALIC:
-			return Font.BOLD + Font.ITALIC;
-		case NORMAL:
-		default:
-			return Font.PLAIN;
-		}
-	}
+  protected int toJavaStyle(StyleConstants.TextStyle style) {
+    switch (style) {
+      case BOLD:
+        return Font.BOLD;
+      case ITALIC:
+        return Font.ITALIC;
+      case BOLD_ITALIC:
+        return Font.BOLD + Font.ITALIC;
+      case NORMAL:
+      default:
+        return Font.PLAIN;
+    }
+  }
 
-	public Font insert(StyleConstants.TextStyle style, int size) {
-		return insert(mapFromStyle(style), toJavaStyle(style), size);
-	}
+  public Font insert(StyleConstants.TextStyle style, int size) {
+    return insert(mapFromStyle(style), toJavaStyle(style), size);
+  }
 
-	protected Font insert(Map<Integer, Font> map, int style, int size) {
-		Font font = map.get(size);
+  protected Font insert(Map<Integer, Font> map, int style, int size) {
+    Font font = map.get(size);
 
-		if (font == null) {
-			font = new Font(name, style, size);
-			map.put(size, font);
-		}
+    if (font == null) {
+      font = new Font(name, style, size);
+      map.put(size, font);
+    }
 
-		return font;
-	}
+    return font;
+  }
 
-	protected Font getFont(StyleConstants.TextStyle style, int size) {
-		Map<Integer, Font> map = mapFromStyle(style);
+  protected Font getFont(StyleConstants.TextStyle style, int size) {
+    Map<Integer, Font> map = mapFromStyle(style);
 
-		Font font = map.get(size);
+    Font font = map.get(size);
 
-		if (font == null)
-			font = insert(map, toJavaStyle(style), size);
+    if (font == null) {
+      font = insert(map, toJavaStyle(style), size);
+    }
 
-		return font;
-	}
+    return font;
+  }
 }

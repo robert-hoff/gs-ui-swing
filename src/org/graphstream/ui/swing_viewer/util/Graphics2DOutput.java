@@ -23,12 +23,12 @@
  * knowledge of the CeCILL-C and LGPL licenses and that you accept their terms.
  */
 
- /**
-  * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
-  * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
-  * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
-  */
-  
+/**
+ * @author Antoine Dutot <antoine.dutot@graphstream-project.org>
+ * @author Guilhelm Savin <guilhelm.savin@graphstream-project.org>
+ * @author Hicham Brahimi <hicham.brahimi@graphstream-project.org>
+ */
+
 package org.graphstream.ui.swing_viewer.util;
 
 import java.awt.Graphics2D;
@@ -39,22 +39,25 @@ import java.io.IOException;
  *
  * <p>
  * Several external libraries use to replace the {@link Graphics2D} of AWT in
- * order to produce a file or on a printer in a given format. However it is not possible to
- * link such libraries in the gs-core module of GraphStream. To avoid this
- * problem, this interface defines a plug-in that must implement be able to
- * yield a {@link Graphics2D} usable instead of the default one. 
+ * order to produce a file or on a printer in a given format. However it is not
+ * possible to link such libraries in the gs-core module of GraphStream. To
+ * avoid this problem, this interface defines a plug-in that must implement be
+ * able to yield a {@link Graphics2D} usable instead of the default one.
  * </p>
  */
 public interface Graphics2DOutput {
-	/**
-	 * The graphics to use instead of the default {@link Graphics2D} of AWT.
-	 */
-	Graphics2D getGraphics();
+  /**
+   * The graphics to use instead of the default {@link Graphics2D} of AWT.
+   */
+  Graphics2D getGraphics();
 
-	/**
-	 * Output (if needed) the results of the last painting done with the {@link Graphics2D}.
-	 * @param outputName The name of the output to use, for some renderers it is a file,
-	 * for others it is an URL, a string description of the output, etc. 
-	 */
-	void outputTo(String outputName) throws IOException;
+  /**
+   * Output (if needed) the results of the last painting done with the
+   * {@link Graphics2D}.
+   * 
+   * @param outputName
+   *          The name of the output to use, for some renderers it is a file, for
+   *          others it is an URL, a string description of the output, etc.
+   */
+  void outputTo(String outputName) throws IOException;
 }
